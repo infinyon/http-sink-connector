@@ -1,4 +1,4 @@
-# Fluvio HTTP Sink Connector
+# HTTP Sink Connector
 Official Infinyon HTTP Sink connector
 
 ## Sink Connector
@@ -39,7 +39,7 @@ http:
 
 
 ### Transformations
-Fluvio HTTP Sink Connector supports [Transformations](https://www.fluvio.io/docs/concepts/transformations-chain/). Records can be modified before sending to Fluvio topic.
+Fluvio HTTP Sink Connector supports [Transformations](https://www.fluvio.io/docs/concepts/transformations-chain/). Records can be modified before sending to endpoint.
 
 The previous example can be extended to add extra transformations to outgoing records:
 ```yaml
