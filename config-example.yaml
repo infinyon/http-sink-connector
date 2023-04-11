@@ -1,0 +1,7 @@
+meta:
+  version: 0.1.0
+  name: slack-sink
+  type: http-sink
+  topic: http-sink
+http:
+  endpoint: "http:127.0.0.1:8080"
