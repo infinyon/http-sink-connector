@@ -63,7 +63,7 @@ transforms:
             "result": "text"
 ```
 
-In this case, additional transformation will be performed before records are sent the http endpoint. A json field called `result` will be renamed to "text".
+In this case, additional transformation will be performed before records are sent the http endpoint. A json field called `result` will be renamed to `text`.
 
 
 Read more about [JSON to JSON transformations](https://www.fluvio.io/smartmodules/certified/jolt/).
