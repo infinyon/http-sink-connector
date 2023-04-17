@@ -1,3 +1,11 @@
+Productionize -  https://github.com/infinyon/http-sink-prototype.
+
+The sink connector must have
+
+Integration Test
+Publish workflow
+Doc
+
 # HTTP Sink Connector
 Official Infinyon HTTP Sink connector
 
