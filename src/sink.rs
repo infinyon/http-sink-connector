@@ -22,7 +22,7 @@ impl HttpSink {
 
         let headers = config.headers.iter().flat_map(|h| h.split_once(':'));
         for (key, value) in headers {
-            request = request.header(key, value);
+            request = request.header(key, value.trim());
         }
 
         Ok(Self { request })
@@ -50,5 +50,30 @@ impl Sink<String> for HttpSink {
         );
 
         Ok(Box::pin(unfold))
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn builds_http_client_from_config() {
+        let config = HttpConfig {
+            endpoint: "http://localhost:8080".parse().unwrap(),
+            user_agent: "fluvio/http-sink 0.1.0".into(),
+            method: "POST".into(),
+            headers: vec!["Content-Type: text/html".into()],
+        };
+        let sink = HttpSink::new(&config).unwrap();
+        let req = sink.request.build().unwrap();
+
+        assert_eq!(req.headers().get("Content-Type").unwrap(), "text/html");
+        assert_eq!(
+            req.headers().get("User-Agent").unwrap(),
+            "fluvio/http-sink 0.1.0"
+        );
+        assert_eq!(req.method().to_string(), "POST");
+        assert_eq!(req.url().to_string(), "http://localhost:8080/");
     }
 }
