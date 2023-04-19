@@ -1,6 +1,6 @@
 [package]
 name = "http"
-group = "john"
+group = "infinyon"
 version = "0.1.0"
 apiVersion = "0.1.0"
 fluvio = "0.10.0"
