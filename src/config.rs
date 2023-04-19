@@ -30,4 +30,3 @@ fn default_user_agent() -> String {
 fn default_http_method() -> String {
     DEFAULT_HTTP_METHOD.into()
 }
-
