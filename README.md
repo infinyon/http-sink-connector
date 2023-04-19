@@ -18,6 +18,8 @@ See [docs](#) here.
 | headers      | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
 | user-agent   | "fluvio/http-sink 0.1.0"   | String          | Request user-agent                                |
 
+> By default HTTP headers will use `Content-Type: text/html` unless anothed value
+> is provided to the Headers configuration.
 
 ### Usage Example
 
