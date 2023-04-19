@@ -5,16 +5,17 @@ Run and test HTTP sink code:
 1. Build and run mockup `tiny-http-server` in this package
 
 ```
-cd tiny-http-server 
-cargo build 
+cd tiny-http-server
 cargo run
 ```
 
 The mockup server runs at `127.0.0.1:8080` and it echos back requests.
 
-2. Build adn Run http-sink via `cdk` (assuming you have cdk installed)
+2. Build and Run http-sink via `cdk` (assuming you have cdk installed)
 
-```
+> You can install CDK using `fluvio install cdk`
+
+```bash
 cdk build
 cdk test -c config-example.yaml
 ```
