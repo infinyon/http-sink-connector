@@ -4,4 +4,4 @@ meta:
   type: http-sink
   topic: http-sink
 http:
-  endpoint: "http:127.0.0.1:8080"
+  endpoint: "https://httpbin.org/post"

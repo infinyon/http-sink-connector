@@ -1,0 +1,9 @@
+meta:
+  version: VERSION
+  name: CONNECTOR
+  type: http-sink
+  topic: TOPIC
+
+http:
+  endpoint: http://localhost:8080
+  interval: 3s
