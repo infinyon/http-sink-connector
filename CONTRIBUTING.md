@@ -1,12 +1,17 @@
-# HTTP Sink Developer Notes
+# Contributing to Infinyon's HTTP Sink Connector
 
-Run and test HTTP sink code:
+This repository scaffold follows Rust's Workspaces structure, theres two crates
+contained for this project:
+
+1. `http-sink` which stores Connector source code
+2. `tiny-http-server`, a HTTP server implementation used for testing
+
+## Run and test HTTP sink code
 
 1. Build and run mockup `tiny-http-server` in this package
 
 ```
-cd tiny-http-server
-cargo run
+cargo run --bin tiny-http-server
 ```
 
 The mockup server runs at `127.0.0.1:8080` and it echos back requests.
@@ -16,6 +21,7 @@ The mockup server runs at `127.0.0.1:8080` and it echos back requests.
 > You can install CDK using `fluvio install cdk`
 
 ```bash
+cd ./crates/http-sink
 cdk build
 cdk test -c config-example.yaml
 ```
@@ -23,7 +29,7 @@ cdk test -c config-example.yaml
 3. Produce on `http-sink` topic
 
 ```
- fluvio produce http-sink
+fluvio produce http-sink
 > test
 Ok!
 > {"request": "hello world"}

@@ -1,0 +1,18 @@
+[package]
+name = "http-sink"
+version = "0.1.0"
+authors = ["Fluvio Contributors <team@fluvio.io>"]
+description = "Connector that reads data from a topic and sends to external HTTP webhook"
+edition = "2021"
+
+[dependencies]
+async-trait = { version = "0.1", default-features = false}
+futures = { version = "0.3", default-features = false }
+async-std = { version = "1.12",  default-features = false, features = ["attributes", "tokio1"]}
+anyhow = { version = "1.0" }
+reqwest = { version = "0.11" }
+url = { version = "2.3", default-features = false, features = ["serde"] }
+serde = { version = "1.0", default-features = false, features = ["derive"]}
+
+fluvio = { git = "https://github.com/infinyon/fluvio", rev = "fece619111485a7e3ed91be429bb7ab6864a79a6"}
+fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", rev = "fece619111485a7e3ed91be429bb7ab6864a79a6", features = ["derive"]}

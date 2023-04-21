@@ -1,4 +1,5 @@
 # HTTP Sink Connector
+
 Official Infinyon HTTP Sink connector
 
 ## Sink Connector
@@ -11,6 +12,7 @@ Supports HTTP/1.0, HTTP/1.1, HTTP/2.0 protocols.
 See [docs](#) here.
 
 ### Configuration
+
 | Option       | default                    | type            | description                                       |
 | :------------| :--------------------------| :-------------- | :-------------------------------------------------|
 | method       | POST                       | String          | POST, PUT                                         |
@@ -41,6 +43,7 @@ http:
 
 
 ### Transformations
+
 Fluvio HTTP Sink Connector supports [Transformations](https://www.fluvio.io/docs/concepts/transformations-chain/). Records can be modified before sending to endpoint.
 
 The previous example can be extended to add extra transformations to outgoing records:
@@ -69,3 +72,9 @@ In this case, additional transformation will be performed before records are sen
 
 
 Read more about [JSON to JSON transformations](https://www.fluvio.io/smartmodules/certified/jolt/).
+
+
+## Contributing
+
+Follow on the conventional `CONTRIBUTING.md` file to setup your environment and
+contribute to this project.
