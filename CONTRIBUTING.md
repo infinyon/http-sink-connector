@@ -1,6 +1,12 @@
-# HTTP Sink Developer Notes
+# Contributing to Infinyon's HTTP Sink Connector
 
-Run and test HTTP sink code:
+This repository scaffold follows Rust's Workspaces structure, theres two crates
+contained for this project:
+
+1. `http-sink` which stores Connector source code
+2. `tiny-http-server`, a HTTP server implementation used for testing
+
+## Run and test HTTP sink code
 
 1. Build and run mockup `tiny-http-server` in this package
 
