@@ -2,7 +2,7 @@
 name = "http-sink"
 version = "0.1.0"
 authors = ["Fluvio Contributors <team@fluvio.io>"]
-description = "Connector that reads data from a topic and prints to stdout"
+description = "Connector that reads data from a topic and sends to external HTTP webhook"
 edition = "2021"
 
 [dependencies]
