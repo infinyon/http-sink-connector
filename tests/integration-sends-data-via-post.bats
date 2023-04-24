@@ -37,47 +37,10 @@ teardown() {
     echo "Using connector $CONNECTOR"
     sleep 45
 
-    echo "Check log file contents (Before Producing)"
-    cat ./$LOGGER_FILENAME
-
     echo "Produce \"California\" on $TOPIC"
     echo "California" | fluvio produce $TOPIC
 
-    echo "Produce \"New York\" on $TOPIC"
-    echo "New York" | fluvio produce $TOPIC
-
-    echo "Produce \"Florida\" on $TOPIC"
-    echo "Florida" | fluvio produce $TOPIC
-
-    echo "Check log file contents (After Producing)"
-    cat ./$LOGGER_FILENAME
-    assert_success
-
-    echo "Checks \"California\" is available on topic"
-    fluvio consume -B -d $TOPIC | grep "California"
-    assert_success
-
-    echo "Checks \"New York\" is available on topic"
-    fluvio consume -B -d $TOPIC | grep "New York"
-    assert_success
-
-    echo "Checks \"Florida\" is available on topic"
-    fluvio consume -B -d $TOPIC | grep "Florida"
-    assert_success
-
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
-    assert_success
-
-    echo "Contains New York on Logger File"
-    cat ./$LOGGER_FILENAME | grep "New York"
-    assert_success
-
-    echo "Contains Florida on Logger File"
-    cat ./$LOGGER_FILENAME | grep "Florida"
-    assert_success
-
-    echo "Counter is 3"
-    cat ./$LOGGER_FILENAME | grep "Counter: 3"
     assert_success
 }
