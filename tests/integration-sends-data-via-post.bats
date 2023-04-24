@@ -40,6 +40,9 @@ teardown() {
     echo "Produce \"California\" on $TOPIC"
     echo "California" | fluvio produce $TOPIC
 
+    echo "Sleep to ensure record is processed"
+    sleep 25
+
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
     assert_success
