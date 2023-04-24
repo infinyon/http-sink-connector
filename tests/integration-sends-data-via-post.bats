@@ -46,4 +46,6 @@ teardown() {
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
     assert_success
+
+    exit 0
 }
