@@ -21,8 +21,7 @@ The mockup server runs at `127.0.0.1:8080` and it echos back requests.
 > You can install CDK using `fluvio install cdk`
 
 ```bash
-cd ./crates/http-sink
-cdk build
+cdk build -p http-sink
 cdk test -c config-example.yaml
 ```
 

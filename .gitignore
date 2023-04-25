@@ -6,3 +6,7 @@ target/
 **/*.rs.bk
 
 **/.DS_Store
+
+**/*.ipkg
+
+log.txt

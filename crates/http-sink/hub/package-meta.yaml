@@ -2,10 +2,11 @@
 package_format_version: "0.3"
 name: http
 version: 0.1.0
-group: john
+group: infinyon
 description: ""
 license: Apache2
 visibility: public
 manifest:
-  - /Users/aj/local/github/http-sink-prototype/Connector.toml
-tags: ~
+  - ../Connector.toml
+  - ../../../target/release/http-sink
+  - ../../../README.md

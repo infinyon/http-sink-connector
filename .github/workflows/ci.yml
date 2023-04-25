@@ -11,7 +11,8 @@ on:
       - staging
       - trying
   pull_request:
-    branches: [main]
+    branches:
+      - main
     paths:
       - "**"
       - "!/*.md"
@@ -23,10 +24,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        rust: [stable]
-        rust-target: [x86_64-unknown-linux-gnu]
-        check: [test, check, fmt, clippy]
+        os:
+          - ubuntu-latest
+        rust:
+          - stable
+        rust-target:
+          - x86_64-unknown-linux-gnu
+        check:
+          - test
+          - check
+          - fmt
+          - clippy
     env:
       RUST_BACKTRACE: full
       RUSTV: ${{ matrix.rust }}
@@ -57,3 +65,93 @@ jobs:
       - name: Cargo clippy
         if: ${{ matrix.check == 'clippy' }}
         run: cargo clippy --all-targets -- -D warnings
+
+  integration_tests:
+    name: Integration Testing on ${{ matrix.os }} for ${{ matrix.connector-name }} connector.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        rust:
+          - stable
+        connector-name:
+          - http-sink
+    env:
+      RUST_BACKTRACE: full
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Create fluvio k3d Cluster
+        uses: AbsaOSS/k3d-action@v2.3.0
+        with:
+          cluster-name: "fluvio"
+          args: --timeout 5m
+
+      - name: Ensure k3d cluster is ready
+        run: |
+          sleep 5
+          ./actions/k3d-check.sh
+
+      - name: Install Fluvio Local Cluster
+        timeout-minutes: 10
+        uses: infinyon/fluvio@master
+        with:
+          cluster-type: k3d
+          version: stable
+
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.rust-target }}-${{ matrix.check }}-integration
+
+      - name: Check Fluvio Installation
+        run: make test_fluvio_install
+
+      - name: Install Fluvio CDK
+        run: fluvio install cdk
+
+      - name: Install Rust ${{ matrix.rust }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          target: wasm32-unknown-unknown
+
+      - name: Build Connector
+        run: cdk build -p http-sink
+
+      - name: Build Tiny HTTP Server
+        run: cargo build --bin tiny-http-server
+
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+
+      - name: Run Tests
+        timeout-minutes: 5
+        run: make test
+
+      - name: Run diagnostics
+        if: ${{ !success() }}
+        timeout-minutes: 5
+        run: fluvio cluster diagnostics
+
+      - name: Upload diagnostics
+        uses: actions/upload-artifact@v3
+        timeout-minutes: 5
+        if: ${{ !success() }}
+        with:
+          name: integration_${{ matrix.connector-name }}
+          path: diagnostics*.gz
+          retention-days: 5
+  done:
+    name: Done
+    needs:
+      - check
+      - integration_tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Done
+        run: echo "Done!"
