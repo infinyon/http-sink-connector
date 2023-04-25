@@ -85,11 +85,6 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
-      - name: Setup Rust Cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.rust-target }}-${{ matrix.check }}-integration
-
       - name: Create fluvio k3d Cluster
         uses: AbsaOSS/k3d-action@v2.3.0
         with:
@@ -111,11 +106,30 @@ jobs:
       - name: Check Fluvio Installation
         run: make test_fluvio_install
 
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.rust-target }}-${{ matrix.check }}-integration
+
       - name: Install Fluvio CDK
         run: fluvio install cdk
 
+      - name: Install Rust stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install Rust ${{ matrix.rust }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          target: wasm32-unknown-unknown
+
       - name: Build Connector
         run: cdk build -p http-sink
+
+      - name: Add wasm
+        run: rustup target add wasm32-unknown-unknown
 
       - name: Build Tiny HTTP Server
         run: cargo build --bin tiny-http-server
@@ -123,7 +137,12 @@ jobs:
       - name: Setup BATS
         uses: mig4/setup-bats@v1
 
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.rust-target }}-${{ matrix.connector-name }}
+
       - name: Run Tests
+        timeout-minutes: 20
         run: make test
 
       - name: Run diagnostics

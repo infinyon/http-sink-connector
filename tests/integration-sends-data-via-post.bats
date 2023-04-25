@@ -4,13 +4,13 @@ load './bats-helpers/bats-support/load'
 load './bats-helpers/bats-assert/load'
 
 setup() {
+    ./target/debug/tiny-http-server & disown
+    MOCK_PID=$!
+
     UUID=$(uuidgen | awk '{print tolower($0)}')
     TOPIC=${UUID}-topic
 
     export LOGGER_FILENAME="${UUID}-logs.txt"
-
-    ./target/debug/tiny-http-server & disown
-    MOCK_PID=$!
 
     FILE=$(mktemp)
     cp ./tests/integration-sends-data-via-post.yaml $FILE
