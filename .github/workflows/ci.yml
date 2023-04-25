@@ -118,9 +118,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-
-      - name: Add wasm
-        run: rustup target add wasm32-unknown-unknown
+          target: wasm32-unknown-unknown
 
       - name: Build Connector
         run: cdk build -p http-sink
