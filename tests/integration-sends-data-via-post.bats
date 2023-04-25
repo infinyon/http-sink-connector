@@ -28,8 +28,8 @@ setup() {
 }
 
 teardown() {
-    kill $MOCK_PID
-    kill $CONNECTOR_PID
+    kill $MOCK_PID || true
+    kill $CONNECTOR_PID || true
 }
 
 @test "integration-sends-data-via-post" {
@@ -47,5 +47,6 @@ teardown() {
     cat ./$LOGGER_FILENAME | grep "California"
     assert_success
 
-    exit 0
+    kill $MOCK_PID
+    kill $CONNECTOR_PID
 }
