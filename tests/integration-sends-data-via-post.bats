@@ -16,20 +16,22 @@ setup() {
     cp ./tests/integration-sends-data-via-post.yaml $FILE
     CONNECTOR=${UUID}-sends-data
     VERSION=$(cat ./crates/http-sink/hub/package-meta.yaml | grep "^version:" | cut -d" " -f2)
+    fluvio topic create $TOPIC
 
     sed -i.BAK "s/CONNECTOR/${CONNECTOR}/g" $FILE
     sed -i.BAK "s/TOPIC/${TOPIC}/g" $FILE
     sed -i.BAK "s/VERSION/${VERSION}/g" $FILE
     cat $FILE
 
-    fluvio topic create $TOPIC
     cdk test -p http-sink -c $FILE & disown
     CONNECTOR_PID=$!
 }
 
 teardown() {
-    kill $MOCK_PID || true
-    kill $CONNECTOR_PID || true
+    fluvio topic delete $TOPIC
+    kill $MOCK_PID
+    kill $CONNECTOR_PID
+    cdk deploy shutdown $CONNECTOR || true
 }
 
 @test "integration-sends-data-via-post" {
@@ -46,7 +48,4 @@ teardown() {
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
     assert_success
-
-    kill $MOCK_PID
-    kill $CONNECTOR_PID
 }
