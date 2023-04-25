@@ -4,18 +4,18 @@ load './bats-helpers/bats-support/load'
 load './bats-helpers/bats-assert/load'
 
 setup() {
-    ./target/debug/tiny-http-server & disown
-    MOCK_PID=$!
-
     UUID=$(uuidgen | awk '{print tolower($0)}')
     TOPIC=${UUID}-topic
 
     export LOGGER_FILENAME="${UUID}-logs.txt"
+    ./target/debug/tiny-http-server & disown
+    MOCK_PID=$!
 
     FILE=$(mktemp)
     cp ./tests/integration-sends-data-via-post.yaml $FILE
     CONNECTOR=${UUID}-sends-data
     VERSION=$(cat ./crates/http-sink/hub/package-meta.yaml | grep "^version:" | cut -d" " -f2)
+    IPKG_NAME="http-$VERSION.ipkg"
     fluvio topic create $TOPIC
 
     sed -i.BAK "s/CONNECTOR/${CONNECTOR}/g" $FILE
@@ -23,15 +23,14 @@ setup() {
     sed -i.BAK "s/VERSION/${VERSION}/g" $FILE
     cat $FILE
 
-    cdk test -p http-sink -c $FILE & disown
-    CONNECTOR_PID=$!
+    cdk publish --pack -p http-sink
+    cdk deploy start --ipkg ./crates/http-sink/hub/$IPKG_NAME --config $FILE
 }
 
 teardown() {
     fluvio topic delete $TOPIC
+    cdk deploy shutdown $CONNECTOR
     kill $MOCK_PID
-    kill $CONNECTOR_PID
-    cdk deploy shutdown $CONNECTOR || true
 }
 
 @test "integration-sends-data-via-post" {
