@@ -1,10 +1,10 @@
 [package]
-name = "http"
+name = "http-sink"
 group = "infinyon"
 version = "0.1.0"
 apiVersion = "0.1.0"
 fluvio = "0.10.0"
-description = ""
+description = "HTTP sink connector reads records from data streaming and generates an HTTP request"
 license = "Apache-2.0"
 visibility = "public"
 
