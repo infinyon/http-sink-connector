@@ -58,7 +58,7 @@ http:
   endpoint: "http://127.0.0.1/post"
   headers:
     - "Authorization: token MySecretToken"
-    - "Cache-Control: no-cache"
+    - "Content-Type: application/json"
 transforms:
   - uses: infinyon/jolt@0.1.0
     with:
