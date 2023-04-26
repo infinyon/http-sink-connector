@@ -11,13 +11,11 @@ setup() {
     ./target/debug/tiny-http-server & disown
     MOCK_PID=$!
 
-    cdk publish --pack -p http-sink
-
     FILE=$(mktemp)
     cp ./tests/integration-sends-data-via-post.yaml $FILE
 
     CONNECTOR=${UUID}-sends-data
-    VERSION=$(cat ./crates/http-sink/hub/package-meta.yaml | grep "^version:" | cut -d" " -f2)
+    VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
     IPKG_NAME="http-sink-$VERSION.ipkg"
     fluvio topic create $TOPIC
 
@@ -26,6 +24,7 @@ setup() {
     sed -i.BAK "s/VERSION/${VERSION}/g" $FILE
     cat $FILE
 
+    cdk publish --pack -p http-sink
     cdk deploy start --ipkg ./crates/http-sink/hub/$IPKG_NAME --config $FILE
 }
 
