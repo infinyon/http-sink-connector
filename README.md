@@ -4,8 +4,7 @@ Official Infinyon HTTP Sink connector
 
 ## Sink Connector
 
-HTTP sink connector reads records from data streaming and generates a
-HTTP Request.
+HTTP sink connector reads records from data streaming and generates an HTTP request.
 
 > Supports HTTP/1.0, HTTP/1.1, HTTP/2.0 protocols.
 
@@ -59,7 +58,7 @@ http:
   endpoint: "http://127.0.0.1/post"
   headers:
     - "Authorization: token MySecretToken"
-    - "Cache-Control: no-cache"
+    - "Content-Type: application/json"
 transforms:
   - uses: infinyon/jolt@0.1.0
     with:
