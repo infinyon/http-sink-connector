@@ -6,10 +6,10 @@ Official Infinyon HTTP Sink connector
 
 HTTP sink connector reads records from data streaming and generates an HTTP request.
 
-Supports HTTP/1.0, HTTP/1.1, HTTP/2.0 protocols.
+> Supports HTTP/1.0, HTTP/1.1, HTTP/2.0 protocols.
 
 
-See [docs](#) here.
+See [docs][1] here.
 
 ### Configuration
 
@@ -78,3 +78,5 @@ Read more about [JSON to JSON transformations](https://www.fluvio.io/smartmodule
 
 Follow on the conventional `CONTRIBUTING.md` file to setup your environment and
 contribute to this project.
+
+[1]: https://www.fluvio.io/connectors/outbound/http/

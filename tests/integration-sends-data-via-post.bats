@@ -13,9 +13,10 @@ setup() {
 
     FILE=$(mktemp)
     cp ./tests/integration-sends-data-via-post.yaml $FILE
+
     CONNECTOR=${UUID}-sends-data
-    VERSION=$(cat ./crates/http-sink/hub/package-meta.yaml | grep "^version:" | cut -d" " -f2)
-    IPKG_NAME="http-$VERSION.ipkg"
+    VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
+    IPKG_NAME="http-sink-$VERSION.ipkg"
     fluvio topic create $TOPIC
 
     sed -i.BAK "s/CONNECTOR/${CONNECTOR}/g" $FILE

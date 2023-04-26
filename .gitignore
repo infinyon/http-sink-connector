@@ -10,3 +10,5 @@ target/
 **/*.ipkg
 
 log.txt
+
+hub/**
