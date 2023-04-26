@@ -3,7 +3,7 @@ package_format_version: "0.3"
 name: http-sink
 version: 0.1.0
 group: infinyon
-description: ""
+description: "Connector that reads data from a topic and sends to external HTTP webhook"
 license: Apache2
 visibility: public
 manifest:
