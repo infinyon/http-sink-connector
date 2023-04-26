@@ -4,7 +4,7 @@ Official Infinyon HTTP Sink connector
 
 ## Sink Connector
 
-HTTP sink connector reads records from data streaming and generates an HTTP  
+HTTP sink connector reads records from data streaming and generates an HTTP request.
 
 Supports HTTP/1.0, HTTP/1.1, HTTP/2.0 protocols.
 
