@@ -1,6 +1,6 @@
 ---
 package_format_version: "0.3"
-name: http
+name: http-sink
 version: 0.1.0
 group: infinyon
 description: ""

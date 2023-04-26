@@ -15,7 +15,7 @@ jobs:
   publish:
     uses: infinyon/fluvio/.github/workflows/connector-publish.yml@master
     with:
-      package-name: http-source
+      package-name: http-sink
       branch: ${{ github.event.inputs.branch }}
       cloud-url: ${{ vars.DEV_CLOUD_URL }}
       fail-fast: false  
