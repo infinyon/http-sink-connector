@@ -14,5 +14,5 @@ reqwest = { version = "0.11" }
 url = { version = "2.3", default-features = false, features = ["serde"] }
 serde = { version = "1.0", default-features = false, features = ["derive"]}
 
-fluvio = { git = "https://github.com/infinyon/fluvio", rev = "fece619111485a7e3ed91be429bb7ab6864a79a6"}
-fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", rev = "fece619111485a7e3ed91be429bb7ab6864a79a6", features = ["derive"]}
+fluvio = { workspace = true }
+fluvio-connector-common = { workspace = true, features = ["derive"]}
