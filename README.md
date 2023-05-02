@@ -51,6 +51,7 @@ HTTP request to `http://httpbin.org/post`.
 
 ```yaml
 # config.yaml
+apiVersion: 0.1.0
 meta:
   version: 0.1.0
   name: httpbin
