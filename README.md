@@ -49,15 +49,18 @@ Fluvio HTTP Sink Connector supports [Transformations](https://www.fluvio.io/docs
 The previous example can be extended to add extra transformations to outgoing records:
 ```yaml
 # config-example.yaml
+apiVersion: 0.1.0
 meta:
   version: 0.1.0
   name: my-http-sink
   type: http-sink
   topic: http-sink-topic
+  secrets:
+    - name: AUTHORIZATION_TOKEN
 http:
   endpoint: "http://127.0.0.1/post"
   headers:
-    - "Authorization: token MySecretToken"
+    - "Authorization: token ${{ secrets.AUTHORIZATION_TOKEN }}"
     - "Content-Type: application/json"
 transforms:
   - uses: infinyon/jolt@0.1.0
