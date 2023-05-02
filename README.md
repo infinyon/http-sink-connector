@@ -20,10 +20,12 @@ meta:
   name: my-http-sink
   type: http-sink
   topic: http-sink-topic
+  secrets:
+    - name: HTTP_TOKEN
 http:
   endpoint: "http://127.0.0.1/post"
   headers:
-    - "Authorization: token MySecretToken"
+    - "Authorization: token ${{ secrets.HTTP_TOKEN }}"
     - "Cache-Control: no-cache"
 ```
 
