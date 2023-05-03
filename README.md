@@ -80,7 +80,7 @@ fluvio cloud connector create --config ./config.yaml
 Check connector logs by running
 
 ```bash
-fluvio cloud connector logs <NAME>
+fluvio cloud connector logs httpbin
 ```
 
 ```log
