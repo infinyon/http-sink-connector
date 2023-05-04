@@ -25,7 +25,7 @@ setup() {
     cat $FILE
 
     cdk publish --pack -p http-sink
-    cdk deploy start --ipkg ./crates/http-sink/hub/$IPKG_NAME --config $FILE
+    cdk deploy start --ipkg ./crates/http-sink/.hub/$IPKG_NAME --config $FILE
 }
 
 teardown() {
