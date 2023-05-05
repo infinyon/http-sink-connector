@@ -1,6 +1,6 @@
 package_format_version: '0.3'
 name: http-sink
-version: 0.1.0
+version: 0.2.0
 group: infinyon
 description: HTTP sink connector reads records from data streaming and generates an HTTP request
 license: e.g. Apache2
