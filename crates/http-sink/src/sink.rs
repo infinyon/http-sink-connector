@@ -44,8 +44,11 @@ impl Sink<String> for HttpSink {
                     .ok_or(anyhow!("ERR: Cannot clone request"))?
                     .send()
                     .await?;
-                tracing::trace!("{:?}", response);
-                tracing::info!("Response Status: {}", response.status());
+
+                if !response.status().is_success() {
+                    tracing::info!("Response Status: {}", response.status());
+                    tracing::info!("{:?}", response);
+                }
 
                 Ok::<_, anyhow::Error>(request)
             },
