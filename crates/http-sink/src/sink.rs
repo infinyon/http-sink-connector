@@ -3,7 +3,7 @@ use async_trait::async_trait;
 use reqwest::{Client, RequestBuilder};
 
 use fluvio::Offset;
-use fluvio_connector_common::{tracing::trace, LocalBoxSink, Sink};
+use fluvio_connector_common::{tracing, LocalBoxSink, Sink};
 
 use crate::HttpConfig;
 
@@ -36,7 +36,7 @@ impl Sink<String> for HttpSink {
         let unfold = futures::sink::unfold(
             request,
             |mut request: RequestBuilder, record: String| async move {
-                trace!("{:?}", request);
+                tracing::trace!("{:?}", request);
 
                 request = request.body(record);
                 let response = request
@@ -44,7 +44,8 @@ impl Sink<String> for HttpSink {
                     .ok_or(anyhow!("ERR: Cannot clone request"))?
                     .send()
                     .await?;
-                trace!("{:?}", response);
+                tracing::trace!("{:?}", response);
+                tracing::info!("Response Status: {}", response.status());
 
                 Ok::<_, anyhow::Error>(request)
             },
