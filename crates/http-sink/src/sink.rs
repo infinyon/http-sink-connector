@@ -39,11 +39,12 @@ impl Sink<String> for HttpSink {
                 trace!("{:?}", request);
 
                 request = request.body(record);
-                request
+                let response = request
                     .try_clone()
                     .ok_or(anyhow!("ERR: Cannot clone request"))?
                     .send()
                     .await?;
+                trace!("{:?}", response);
 
                 Ok::<_, anyhow::Error>(request)
             },
