@@ -65,6 +65,8 @@ impl Sink<String> for HttpSink {
 
 #[cfg(test)]
 mod test {
+    use std::time::Duration;
+
     use super::*;
 
     #[test]
@@ -74,6 +76,8 @@ mod test {
             user_agent: "fluvio/http-sink 0.1.0".into(),
             method: "POST".into(),
             headers: vec!["Content-Type: text/html".into()],
+            http_connect_timeout_millis: Duration::from_secs(1),
+            http_timeout_secs: Duration::from_secs(15),
         };
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.request.build().unwrap();
