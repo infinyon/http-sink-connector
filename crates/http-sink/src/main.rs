@@ -17,9 +17,12 @@ async fn start(config: HttpConfig, mut stream: impl ConsumerStream) -> Result<()
 
     tracing::info!("Starting HTTP Sink Connector");
     while let Some(item) = stream.next().await {
+        tracing::debug!("Received record in consumer");
         let str = String::from_utf8(item?.as_ref().to_vec())?;
         sink.send(str).await?;
     }
+    
+    tracing::info!("Consumer loop finished");
 
     Ok(())
 }
