@@ -29,12 +29,14 @@ http:
     - "Cache-Control: no-cache"
 ```
 
-| Option       | default                    | type            | description                                       |
-| :------------| :--------------------------| :-------------- | :-------------------------------------------------|
-| method       | POST                       | String          | POST, PUT                                         |
-| endpoint     | -                          | String          | HTTP URL endpoint                                 |
-| headers      | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
-| user-agent   | `fluvio/http-sink 0.1.0`   | String          | Request user-agent                                |
+| Option               | default                    | type            | description                                       |
+| :--------------------| :--------------------------| :-------------- | :-------------------------------------------------|
+| method               | POST                       | String          | POST, PUT                                         |
+| endpoint             | -                          | String          | HTTP URL endpoint                                 |
+| headers              | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
+| user-agent           | `fluvio/http-sink 0.1.0`   | String          | Request user-agent                                |
+| http_request_timeout | 1s                         | String          | HTTP Request Timeout                              |
+| http_connect_timeout | 15s                        | String          | HTTP Connect Timeout                              |
 
 > By default HTTP headers will use `Content-Type: text/html` unless anothed value
 > is provided to the Headers configuration.
