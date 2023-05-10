@@ -21,7 +21,6 @@ async fn start(config: HttpConfig, mut stream: impl ConsumerStream) -> Result<()
         let str = String::from_utf8(item?.as_ref().to_vec())?;
         sink.send(str).await?;
     }
-    
     tracing::info!("Consumer loop finished");
 
     Ok(())
