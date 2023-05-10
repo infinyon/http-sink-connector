@@ -1,7 +1,9 @@
 meta:
-  version: 0.1.0
+  version: 0.2.1
   name: slack-sink
   type: http-sink
   topic: http-sink
 http:
   endpoint: "https://httpbin.org/post"
+  http_request_timeout: 1s
+  http_connect_timeout: 15s
