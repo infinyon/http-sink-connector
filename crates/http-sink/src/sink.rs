@@ -17,8 +17,8 @@ pub(crate) struct HttpSink {
 impl HttpSink {
     pub(crate) fn new(config: &HttpConfig) -> Result<Self> {
         let client = Client::builder()
-            .timeout(Duration::from_secs(15))
-            .connect_timeout(Duration::from_secs(5))
+            .timeout(Duration::from_secs(config.http_timeout_secs))
+            .connect_timeout(Duration::from_secs(config.http_connect_timeout_millis))
             .build()?;
         let method = config.method.parse()?;
 

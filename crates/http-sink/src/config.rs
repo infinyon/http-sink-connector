@@ -22,6 +22,24 @@ pub(crate) struct HttpConfig {
     /// Headers to include in the HTTP request, in "Key=Value" format
     #[serde(default = "default_http_headers")]
     pub headers: Vec<String>,
+
+    /// Http request timeout in seconds
+    #[serde(default = "default_http_timeout_secs")]
+    pub http_timeout_secs: u64,
+
+    /// Http connect timeout in milliseconds
+    #[serde(default = "default_http_connect_timeout_millis")]
+    pub http_connect_timeout_millis: u64,
+}
+
+#[inline]
+fn default_http_timeout_secs() -> u64 {
+    15
+}
+
+#[inline]
+fn default_http_connect_timeout_millis() -> u64 {
+    1000
 }
 
 #[inline]
