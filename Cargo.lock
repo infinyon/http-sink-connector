@@ -1522,6 +1522,7 @@ dependencies = [
  "fluvio",
  "fluvio-connector-common",
  "futures",
+ "humantime-serde",
  "reqwest",
  "serde",
  "url",

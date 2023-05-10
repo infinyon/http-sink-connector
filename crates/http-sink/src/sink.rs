@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 use reqwest::{Client, RequestBuilder};
@@ -17,8 +15,8 @@ pub(crate) struct HttpSink {
 impl HttpSink {
     pub(crate) fn new(config: &HttpConfig) -> Result<Self> {
         let client = Client::builder()
-            .timeout(Duration::from_secs(config.http_timeout_secs))
-            .connect_timeout(Duration::from_secs(config.http_connect_timeout_millis))
+            .timeout(config.http_timeout_secs)
+            .connect_timeout(config.http_connect_timeout_millis)
             .build()?;
         let method = config.method.parse()?;
 

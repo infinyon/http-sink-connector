@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use fluvio_connector_common::connector;
 use url::Url;
 
@@ -24,22 +26,22 @@ pub(crate) struct HttpConfig {
     pub headers: Vec<String>,
 
     /// Http request timeout in seconds
-    #[serde(default = "default_http_timeout_secs")]
-    pub http_timeout_secs: u64,
+    #[serde(with = "humantime_serde", default = "default_http_timeout")]
+    pub http_timeout_secs: Duration,
 
     /// Http connect timeout in milliseconds
-    #[serde(default = "default_http_connect_timeout_millis")]
-    pub http_connect_timeout_millis: u64,
+    #[serde(with = "humantime_serde", default = "default_http_connect_timeout")]
+    pub http_connect_timeout_millis: Duration,
 }
 
 #[inline]
-fn default_http_timeout_secs() -> u64 {
-    15
+fn default_http_timeout() -> Duration {
+    Duration::from_secs(15)
 }
 
 #[inline]
-fn default_http_connect_timeout_millis() -> u64 {
-    1000
+fn default_http_connect_timeout() -> Duration {
+    Duration::from_millis(1000)
 }
 
 #[inline]
