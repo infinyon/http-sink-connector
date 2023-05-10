@@ -46,8 +46,10 @@ impl Sink<String> for HttpSink {
                     .await?;
 
                 if !response.status().is_success() {
-                    tracing::info!("Response Status: {}", response.status());
-                    tracing::info!("{:?}", response);
+                    tracing::warn!("Response Status: {}", response.status());
+                    tracing::debug!("{:?}", response);
+                } else {
+                    tracing::debug!("Response Status: {}", response.status());
                 }
 
                 Ok::<_, anyhow::Error>(request)
