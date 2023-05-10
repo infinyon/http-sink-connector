@@ -27,11 +27,11 @@ pub(crate) struct HttpConfig {
 
     /// Http request timeout in seconds
     #[serde(with = "humantime_serde", default = "default_http_timeout")]
-    pub http_timeout_secs: Duration,
+    pub http_timeout: Duration,
 
     /// Http connect timeout in milliseconds
     #[serde(with = "humantime_serde", default = "default_http_connect_timeout")]
-    pub http_connect_timeout_millis: Duration,
+    pub http_connect_timeout: Duration,
 }
 
 #[inline]

@@ -15,8 +15,8 @@ pub(crate) struct HttpSink {
 impl HttpSink {
     pub(crate) fn new(config: &HttpConfig) -> Result<Self> {
         let client = Client::builder()
-            .timeout(config.http_timeout_secs)
-            .connect_timeout(config.http_connect_timeout_millis)
+            .timeout(config.http_timeout)
+            .connect_timeout(config.http_connect_timeout)
             .build()?;
         let method = config.method.parse()?;
 
@@ -76,8 +76,8 @@ mod test {
             user_agent: "fluvio/http-sink 0.1.0".into(),
             method: "POST".into(),
             headers: vec!["Content-Type: text/html".into()],
-            http_connect_timeout_millis: Duration::from_secs(1),
-            http_timeout_secs: Duration::from_secs(15),
+            http_connect_timeout: Duration::from_secs(1),
+            http_timeout: Duration::from_secs(15),
         };
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.request.build().unwrap();
