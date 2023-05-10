@@ -41,7 +41,7 @@ fn default_http_timeout() -> Duration {
 
 #[inline]
 fn default_http_connect_timeout() -> Duration {
-    Duration::from_millis(1000)
+    Duration::from_secs(1)
 }
 
 #[inline]
