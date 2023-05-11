@@ -16,7 +16,7 @@ HTTP Sink is configured using a YAML file:
 # config-example.yaml
 apiVersion: 0.1.0
 meta:
-  version: 0.1.0
+  version: 0.2.1
   name: my-http-sink
   type: http-sink
   topic: http-sink-topic
