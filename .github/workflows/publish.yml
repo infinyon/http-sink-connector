@@ -21,7 +21,7 @@ jobs:
       package-name: http-sink
       branch: ${{ github.event.inputs.branch }}
       fail-fast: false
-      readme: '../../README.md'
+      readme: './README.md'
     secrets:
       CLOUD_USER_EMAIL: ${{ secrets.HUB_USER_EMAIL }}
       CLOUD_USER_PASSWORD: ${{ secrets.HUB_USER_PASSWORD }}
