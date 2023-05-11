@@ -85,6 +85,12 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
+      - name: Install musl-tools
+        run: |
+          set -ex
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
       - name: Create fluvio k3d Cluster
         uses: AbsaOSS/k3d-action@v2.4.0
         with:
