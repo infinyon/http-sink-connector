@@ -57,7 +57,7 @@ HTTP request to `http://httpbin.org/post`.
 # config.yaml
 apiVersion: 0.1.0
 meta:
-  version: 0.1.0
+  version: 0.2.1
   name: httpbin
   type: http-sink
   topic: httpbin-send-post
@@ -133,7 +133,7 @@ The previous example can be extended to add extra transformations to outgoing re
 # config-example.yaml
 apiVersion: 0.1.0
 meta:
-  version: 0.1.0
+  version: 0.2.1
   name: my-http-sink
   type: http-sink
   topic: http-sink-topic
