@@ -124,8 +124,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-          target:
-            - x86_64-unknown-linux-musl
+          target: x86_64-unknown-linux-musl
 
       - name: Build Connector
         run: cdk build -p http-sink --target x86_64-unknown-linux-musl
