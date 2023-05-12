@@ -29,7 +29,7 @@ jobs:
         rust:
           - stable
         rust-target:
-          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
         check:
           - test
           - check
@@ -85,6 +85,12 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
+      - name: Install musl-tools
+        run: |
+          set -ex
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
       - name: Create fluvio k3d Cluster
         uses: AbsaOSS/k3d-action@v2.4.0
         with:
@@ -112,7 +118,7 @@ jobs:
         run: make test_fluvio_install
 
       - name: Install Fluvio CDK
-        run: fluvio install cdk
+        run: fluvio install cdk --develop
 
       - name: Install Rust ${{ matrix.rust }}
         uses: actions-rs/toolchain@v1
@@ -121,7 +127,7 @@ jobs:
           target: x86_64-unknown-linux-musl
 
       - name: Build Connector
-        run: cdk build -p http-sink
+        run: cdk build -p http-sink --target x86_64-unknown-linux-musl
 
       - name: Build Tiny HTTP Server
         run: cargo build --bin tiny-http-server
