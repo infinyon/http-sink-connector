@@ -125,7 +125,6 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           target:
-            - wasm32-unknown-unknown
             - x86_64-unknown-linux-musl
 
       - name: Build Connector
