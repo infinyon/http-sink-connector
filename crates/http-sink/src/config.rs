@@ -3,7 +3,7 @@ use std::time::Duration;
 use fluvio_connector_common::connector;
 use url::Url;
 
-const DEFAULT_USER_AGENT: &str = "fluvio/http-sink 0.1.0";
+const DEFAULT_USER_AGENT: &str = concat!("fluvio/http-sink ", env!("CARGO_PKG_VERSION"));
 const DEFAULT_HTTP_METHOD: &str = "POST";
 const DEFAULT_HTTP_HEADERS: [&str; 1] = ["Content-Type: text/html"];
 
