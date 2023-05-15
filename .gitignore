@@ -9,6 +9,8 @@ target/
 
 **/*.ipkg
 
-log.txt
-
 hub/**
+
+# Development
+log.txt
+development-config.yml

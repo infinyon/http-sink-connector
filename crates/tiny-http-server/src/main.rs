@@ -7,9 +7,17 @@ use std::sync::{Arc, Mutex};
 extern crate tiny_http;
 
 #[derive(Clone, Debug, Default)]
+pub struct RequestData {
+    #[allow(dead_code)]
+    payload: String,
+    #[allow(dead_code)]
+    user_agent: String,
+}
+
+#[derive(Clone, Debug, Default)]
 struct State {
     counter: Arc<Mutex<AtomicU32>>,
-    payload: Arc<Mutex<Vec<String>>>,
+    payload: Arc<Mutex<Vec<RequestData>>>,
 }
 
 impl State {
@@ -17,7 +25,7 @@ impl State {
         self.counter.lock().unwrap().get_mut().to_owned()
     }
 
-    fn get_payload(&self) -> Vec<String> {
+    fn get_payload(&self) -> Vec<RequestData> {
         self.payload.lock().unwrap().to_owned()
     }
 
@@ -25,8 +33,8 @@ impl State {
         self.counter.lock().unwrap().fetch_add(1, Ordering::SeqCst)
     }
 
-    fn append_payload(&self, payload: String) {
-        self.payload.lock().unwrap().push(payload);
+    fn append_payload(&self, data: RequestData) {
+        self.payload.lock().unwrap().push(data);
     }
 }
 
@@ -57,7 +65,7 @@ impl FileLogger {
         String::from(s)
     }
 
-    fn write_log(&mut self, counter: u32, payload: Vec<String>) {
+    fn write_log(&mut self, counter: u32, payload: Vec<RequestData>) {
         writeln!(self.file, "Counter: {}\nPayloads: \n{:?}", counter, payload)
             .expect("Failed to write to file");
     }
@@ -74,9 +82,18 @@ fn main() {
     for mut request in server.incoming_requests() {
         let mut content = String::new();
         request.as_reader().read_to_string(&mut content).unwrap();
+        let user_agent = request
+            .headers()
+            .iter()
+            .find(|h| h.field.equiv("user-agent"));
 
         if !content.is_empty() {
-            state.append_payload(content.clone());
+            let data = RequestData {
+                payload: content.clone(),
+                user_agent: user_agent.map(|h| h.value.to_string()).unwrap_or_default(),
+            };
+
+            state.append_payload(data);
         }
 
         state.count();

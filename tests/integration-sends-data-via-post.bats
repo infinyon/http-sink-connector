@@ -15,7 +15,7 @@ setup() {
     cp ./tests/integration-sends-data-via-post.yaml $FILE
 
     CONNECTOR=${UUID}-sends-data
-    VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
+    export VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
     IPKG_NAME="http-sink-$VERSION.ipkg"
     fluvio topic create $TOPIC
 
@@ -47,5 +47,9 @@ teardown() {
 
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
+    assert_success
+
+    echo "Contains User Agent with current version"
+    cat ./$LOGGER_FILENAME | grep "user_agent: \"fluvio/http-sink $VERSION\""
     assert_success
 }
