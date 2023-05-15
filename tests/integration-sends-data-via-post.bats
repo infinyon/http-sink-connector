@@ -48,6 +48,18 @@ teardown() {
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
     assert_success
+}
+
+@test "sends-user-agent-with-current-version" {
+    echo "Starting consumer on topic $TOPIC"
+    echo "Using connector $CONNECTOR"
+    sleep 45
+
+    echo "Produce \"North Carolina\" on $TOPIC"
+    echo "North Carolina" | fluvio produce $TOPIC
+
+    echo "Sleep to ensure record is processed"
+    sleep 25
 
     echo "Contains User Agent with current version"
     cat ./$LOGGER_FILENAME | grep "user_agent: \"fluvio/http-sink $VERSION\""
