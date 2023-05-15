@@ -24,8 +24,8 @@ setup() {
     sed -i.BAK "s/VERSION/${VERSION}/g" $FILE
     cat $FILE
 
-    cdk publish --pack -p http-sink --target x86_64-unknown-linux-musl
-    cdk deploy start --ipkg ./crates/http-sink/.hub/$IPKG_NAME --config $FILE
+    cdk publish -p http-sink --pack --target x86_64-unknown-linux-musl
+    cdk deploy -p http-sink start --config $FILE
 }
 
 teardown() {
