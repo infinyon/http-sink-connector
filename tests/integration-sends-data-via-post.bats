@@ -30,7 +30,7 @@ setup() {
 
 teardown() {
     fluvio topic delete $TOPIC
-    cdk deploy shutdown $CONNECTOR
+    cdk deploy shutdown --name $CONNECTOR
     kill $MOCK_PID
 }
 
