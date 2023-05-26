@@ -15,7 +15,7 @@ setup() {
     cp ./tests/integration-sends-data-via-post.yaml $FILE
 
     CONNECTOR=${UUID}-sends-data
-    VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
+    export VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
     IPKG_NAME="http-sink-$VERSION.ipkg"
     fluvio topic create $TOPIC
 
@@ -30,7 +30,7 @@ setup() {
 
 teardown() {
     fluvio topic delete $TOPIC
-    cdk deploy shutdown $CONNECTOR
+    cdk deploy shutdown --name $CONNECTOR
     kill $MOCK_PID
 }
 
@@ -47,5 +47,21 @@ teardown() {
 
     echo "Contains California on Logger File"
     cat ./$LOGGER_FILENAME | grep "California"
+    assert_success
+}
+
+@test "sends-user-agent-with-current-version" {
+    echo "Starting consumer on topic $TOPIC"
+    echo "Using connector $CONNECTOR"
+    sleep 45
+
+    echo "Produce \"North Carolina\" on $TOPIC"
+    echo "North Carolina" | fluvio produce $TOPIC
+
+    echo "Sleep to ensure record is processed"
+    sleep 25
+
+    echo "Contains User Agent with current version"
+    cat ./$LOGGER_FILENAME | grep "user_agent: \"fluvio/http-sink $VERSION\""
     assert_success
 }
