@@ -15,7 +15,7 @@ if [[ "$MATRIX_OS" == "ubuntu-latest" ]] || [[ "$MATRIX_OS" == "ubuntu-20.04" ]]
     pushd /usr/local/bin && \
     sudo ln -s ../zig-linux-$ARCH-$ZIG_VER/zig . && \
     popd && \
-    rm zig-linux-$ARCH-0.9.1.tar.* && \
+    rm zig-linux-$ARCH-$ZIG_VER.tar.* && \
 
     sudo apt-get install lld-12 && \
     echo "FLUVIO_BUILD_LLD=lld-12" | tee -a $GITHUB_ENV
@@ -29,3 +29,5 @@ if [[ "$MATRIX_OS" == "macos-latest" ]] || [[ "$MATRIX_OS" == "macos-11" ]] || [
     brew install llvm@${LLVM_VER} && \
     echo "FLUVIO_BUILD_LLD=/usr/local/opt/llvm@${LLVM_VER}/bin/lld" | tee -a $GITHUB_ENV
 fi
+
+zig version
