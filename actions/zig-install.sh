@@ -1,4 +1,4 @@
-
+#!/bin/bash
 set -e
 MATRIX_OS=${1}
 ZIG_VER=0.9.1
