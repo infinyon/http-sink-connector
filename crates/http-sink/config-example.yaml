@@ -1,5 +1,5 @@
 meta:
-  version: 0.2.2
+  version: 0.2.3
   name: slack-sink
   type: http-sink
   topic: http-sink
