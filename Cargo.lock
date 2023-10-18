@@ -144,7 +144,7 @@ dependencies = [
  "log",
  "parking",
  "polling",
- "rustix 0.37.23",
+ "rustix 0.37.25",
  "slab",
  "socket2 0.4.9",
  "waker-fn",
@@ -193,7 +193,7 @@ dependencies = [
  "cfg-if",
  "event-listener",
  "futures-lite",
- "rustix 0.37.23",
+ "rustix 0.37.25",
  "signal-hook",
  "windows-sys",
 ]
@@ -1912,7 +1912,7 @@ version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ffc89ccdc6e10d6907450f753537ebc5c5d3460d2e4e62ea74bd571db62c0f9e"
 dependencies = [
- "rustix 0.37.23",
+ "rustix 0.37.25",
 ]
 
 [[package]]
@@ -2490,9 +2490,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "0.37.23"
+version = "0.37.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d69718bf81c6127a49dc64e44a742e8bb9213c0ff8869a22c308f84c1d4ab06"
+checksum = "d4eb579851244c2c03e7c24f501c3432bed80b8f720af1d6e5b0e0f01555a035"
 dependencies = [
  "bitflags 1.3.2",
  "errno",
@@ -3332,7 +3332,7 @@ dependencies = [
  "directories-next",
  "file-per-thread-logger",
  "log",
- "rustix 0.37.23",
+ "rustix 0.37.25",
  "serde",
  "sha2",
  "toml 0.5.11",
@@ -3427,7 +3427,7 @@ checksum = "e0e22d42113a1181fee3477f96639fd88c757b303f7083e866691f47a06065c5"
 dependencies = [
  "cc",
  "cfg-if",
- "rustix 0.37.23",
+ "rustix 0.37.25",
  "wasmtime-asm-macros",
  "windows-sys",
 ]
@@ -3448,7 +3448,7 @@ dependencies = [
  "log",
  "object 0.30.4",
  "rustc-demangle",
- "rustix 0.37.23",
+ "rustix 0.37.25",
  "serde",
  "target-lexicon",
  "wasmtime-environ",
@@ -3466,7 +3466,7 @@ checksum = "c7228ed7aaedec75d6bd298f857e42f4626cffdb7b577c018eb2075c65d44dcf"
 dependencies = [
  "object 0.30.4",
  "once_cell",
- "rustix 0.37.23",
+ "rustix 0.37.25",
 ]
 
 [[package]]
@@ -3497,7 +3497,7 @@ dependencies = [
  "memoffset 0.8.0",
  "paste",
  "rand",
- "rustix 0.37.23",
+ "rustix 0.37.25",
  "sptr",
  "wasmtime-asm-macros",
  "wasmtime-environ",
