@@ -8,6 +8,6 @@ authors = ["Fluvio Contributors <team@fluvio.io>"]
 
 [dependencies]
 tiny_http = "0.12"
-async-std = { version = "1.8",  default-features = false, features = ["attributes", "tokio1"] }
+async-std = { workspace = true }
 serde = { version = "1.0", default-features = false, features = ["derive"]}
 
