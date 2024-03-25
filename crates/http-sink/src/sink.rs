@@ -1,14 +1,11 @@
 use std::collections::HashMap;
 
 use anyhow::{anyhow, Result};
-use async_std::stream::Map;
 use async_trait::async_trait;
 use reqwest::{Client, RequestBuilder};
 
 use fluvio::Offset;
-use fluvio_connector_common::{tracing::{self, Value}, LocalBoxSink, Sink};
-use serde_json::json;
-
+use fluvio_connector_common::{tracing, LocalBoxSink, Sink};
 use crate::HttpConfig;
 
 #[derive(Debug)]
@@ -58,9 +55,19 @@ impl Sink<String> for HttpSink {
                 if params.len() > 0 {
                     if let Ok(json_message) = serde_json::from_str::<HashMap<String, serde_json::Value>>(&record){
                         for param in params.into_iter() {
-                            if json_message.contains_key(&param){
-                                let value = json_message.get(&param).unwrap().to_string();
-                                body.request = body.request.query(&[(param.clone(), value)]);
+                            let (key, replace_key) = match param.split_once(':') {
+                                Some(map) =>{
+                                    (
+                                        map.0.trim().to_owned(),
+                                        map.1.trim().to_owned()
+                                    )
+                                }
+                                None => (param.clone(), param.clone())
+                            };
+                            if json_message.contains_key(&key){
+                                tracing::info!("Using URL parameter: {key}");
+                                let value = json_message.get(&key).unwrap().to_string();
+                                body.request = body.request.query(&[(replace_key, value)]);
 
                             }
                         }

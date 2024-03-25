@@ -34,7 +34,7 @@ http:
 | method               | POST                       | String          | POST, PUT                                         |
 | endpoint             | -                          | String          | HTTP URL endpoint                                 |
 | headers              | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
-| params               | -                          | Array\<String\> | Dynamic URL parameters gathered from a json response. Set any key from a json message that you want to include into the URL as a parameter|
+| params               | -                          | Array\<String\> | Dynamic URL parameters gathered from a json response. Set any key from a json message that you want to include into the URL as a parameter. You can also replace the parameter name by adding ": <param name> in the end of the string, like "json_key : new_key_name"|
 | user-agent           | `fluvio/http-sink 0.2.2`   | String          | Request user-agent                                |
 | http_request_timeout | 1s                         | String          | HTTP Request Timeout                              |
 | http_connect_timeout | 15s                        | String          | HTTP Connect Timeout                              |
