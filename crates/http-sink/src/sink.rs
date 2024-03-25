@@ -3,10 +3,10 @@ use std::collections::HashMap;
 use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 use reqwest::{Client, RequestBuilder};
-
+use urlencoding::encode;
 use fluvio::Offset;
 use fluvio_connector_common::{tracing, LocalBoxSink, Sink};
-use crate::HttpConfig;
+use crate::{config::Parameter, HttpConfig};
 
 #[derive(Debug)]
 pub(crate) struct HttpSink {
@@ -15,7 +15,7 @@ pub(crate) struct HttpSink {
 #[derive(Debug)]
 struct Body{
     request: RequestBuilder,
-    params: Vec<String>,
+    params: Vec<Parameter>,
 }
 impl Clone for Body {
     fn clone(&self) -> Self {
@@ -55,19 +55,16 @@ impl Sink<String> for HttpSink {
                 if params.len() > 0 {
                     if let Ok(json_message) = serde_json::from_str::<HashMap<String, serde_json::Value>>(&record){
                         for param in params.into_iter() {
-                            let (key, replace_key) = match param.split_once(':') {
-                                Some(map) =>{
-                                    (
-                                        map.0.trim().to_owned(),
-                                        map.1.trim().to_owned()
-                                    )
+                            let key = param.replace.unwrap_or(param.key.clone());
+                            if json_message.contains_key(&param.key){
+                                let mut value = json_message.get(&param.key).unwrap().to_string();
+                                if let Some(prefix) = param.prefix{
+                                    value = prefix + &value;
                                 }
-                                None => (param.clone(), param.clone())
-                            };
-                            if json_message.contains_key(&key){
-                                tracing::info!("Using URL parameter: {key}");
-                                let value = json_message.get(&key).unwrap().to_string();
-                                body.request = body.request.query(&[(replace_key, value)]);
+                                if let Some(suffix) = param.suffix{
+                                    value = value + &suffix;
+                                }
+                                body.request = body.request.query(&[(encode(&key), encode(&value))]);
 
                             }
                         }

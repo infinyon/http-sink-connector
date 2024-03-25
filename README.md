@@ -34,10 +34,20 @@ http:
 | method               | POST                       | String          | POST, PUT                                         |
 | endpoint             | -                          | String          | HTTP URL endpoint                                 |
 | headers              | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
-| params               | -                          | Array\<String\> | Dynamic URL parameters gathered from a json response. Set any key from a json message that you want to include into the URL as a parameter. You can also replace the parameter name by adding ": <param name> in the end of the string, like "json_key : new_key_name"|
+| params               | -                          | Array\<Mapping\>| Dynamic URL parameters gathered from a json response|
 | user-agent           | `fluvio/http-sink 0.2.2`   | String          | Request user-agent                                |
 | http_request_timeout | 1s                         | String          | HTTP Request Timeout                              |
 | http_connect_timeout | 15s                        | String          | HTTP Connect Timeout                              |
+
+#### Parameter Configuration
+| Option               | default                    | type            | description                                       |
+| :--------------------| :--------------------------| :-------------- | :-------------------------------------------------|
+| key                  | -                          | String          | The JSON key to get the value for the parameter   |
+| replace              | -                          | String          | Parameter's new name                              |
+| prefix               | -                          | String          | String to be added before the value                |
+| suffix               | -                          | String          | String to be added after the value                |
+
+ Set any key from a json message that you want to include into the URL as a parameter. You can also replace the parameter name by adding ": <param name> in the end of the string, like "json_key : new_key_name"
 
 > By default HTTP headers will use `Content-Type: text/html` unless anothed value
 > is provided to the Headers configuration.

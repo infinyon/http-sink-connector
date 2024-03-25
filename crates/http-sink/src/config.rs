@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use fluvio_connector_common::connector;
+use serde::Deserialize;
 use url::Url;
 
 const DEFAULT_USER_AGENT: &str = concat!("fluvio/http-sink ", env!("CARGO_PKG_VERSION"));
@@ -35,7 +36,15 @@ pub(crate) struct HttpConfig {
 
     //HTTP Parameters that can be gattered from a Message if the message is a json file
     #[serde(default = "default_http_params")]
-    pub params: Vec<String>,
+    pub params: Vec<Parameter>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Parameter{
+    pub key: String,
+    pub replace: Option<String>,
+    pub prefix: Option<String>,
+    pub suffix: Option<String>
 }
 
 #[inline]
@@ -63,6 +72,6 @@ fn default_http_headers() -> Vec<String> {
     DEFAULT_HTTP_HEADERS.map(String::from).into_iter().collect()
 }
 
-fn default_http_params () -> Vec<String>{
+fn default_http_params () -> Vec<Parameter>{
     vec![]
 }
