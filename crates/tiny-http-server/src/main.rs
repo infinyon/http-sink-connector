@@ -12,6 +12,8 @@ pub struct RequestData {
     payload: String,
     #[allow(dead_code)]
     user_agent: String,
+    #[allow(dead_code)]
+    url: String,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -91,6 +93,7 @@ fn main() {
             let data = RequestData {
                 payload: content.clone(),
                 user_agent: user_agent.map(|h| h.value.to_string()).unwrap_or_default(),
+                url: request.url().to_string()
             };
 
             state.append_payload(data);

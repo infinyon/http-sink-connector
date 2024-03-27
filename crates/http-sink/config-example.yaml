@@ -7,3 +7,7 @@ http:
   endpoint: "https://httpbin.org/post"
   http_request_timeout: 1s
   http_connect_timeout: 15s
+  url_parameters: 
+    - record_key: id
+      url_key: sql_condition
+      prefix: "user_id = "

@@ -13,4 +13,7 @@ hub/**
 
 # Development
 log.txt
+*-logs.txt
+*.log
+
 development-config.yml

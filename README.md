@@ -73,7 +73,7 @@ We could write a url_parameter containing the following information:
 
 This would be the ending result:
 ```md
-https://someurl.com?updatecondition=user_id%20%3D%202901
+https://someurl.com?updatecondition=user_id+%3D+2901
 ```
 
 
