@@ -32,6 +32,10 @@ pub(crate) struct HttpConfig {
     /// Http connect timeout in milliseconds
     #[serde(with = "humantime_serde", default = "default_http_connect_timeout")]
     pub http_connect_timeout: Duration,
+
+    //HTTP Parameters that can be gattered from a Message if the message is a json file
+    #[serde(default = "default_http_params")]
+    pub params: Vec<String>,
 }
 
 #[inline]
@@ -57,4 +61,8 @@ fn default_http_method() -> String {
 #[inline]
 fn default_http_headers() -> Vec<String> {
     DEFAULT_HTTP_HEADERS.map(String::from).into_iter().collect()
+}
+
+fn default_http_params () -> Vec<String>{
+    vec![]
 }

@@ -1540,6 +1540,7 @@ dependencies = [
  "humantime-serde",
  "reqwest",
  "serde",
+ "serde_json",
  "url",
 ]
 
