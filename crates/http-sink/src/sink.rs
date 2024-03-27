@@ -41,7 +41,7 @@ impl HttpSink {
             request = request.header(key, value.trim());
         }
 
-        Ok(Self { body: Body{request, params: config.params.clone()} })
+        Ok(Self { body: Body{request, params: config.url_parameters.clone()} })
     }
 }
 
@@ -55,23 +55,22 @@ impl Sink<String> for HttpSink {
                 if params.len() > 0 {
                     if let Ok(json_message) = serde_json::from_str::<HashMap<String, serde_json::Value>>(&record){
                         for param in params.into_iter() {
-                            let key = param.replace.unwrap_or(param.key.clone());
-                            if json_message.contains_key(&param.key){
-                                let mut value = json_message.get(&param.key).unwrap().to_string();
+                            let url_key = param.url_key.unwrap_or(param.record_key.clone());
+                            if json_message.contains_key(&param.record_key){
+                                let mut value = json_message.get(&param.record_key).unwrap().to_string();
                                 if let Some(prefix) = param.prefix{
                                     value = prefix + &value;
                                 }
                                 if let Some(suffix) = param.suffix{
                                     value = value + &suffix;
                                 }
-                                body.request = body.request.query(&[(encode(&key), encode(&value))]);
+                                body.request = body.request.query(&[(encode(&url_key),&value)]);
 
                             }
                         }
                     }
                 }
-                
-                tracing::trace!("{:?}", body.request);
+                tracing::info!("{:?}", body.request);
 
                 body.request = body.request.body(record);
                 let response = body.request
@@ -109,7 +108,7 @@ mod test {
             headers: vec!["Content-Type: text/html".into()],
             http_connect_timeout: Duration::from_secs(1),
             http_request_timeout: Duration::from_secs(15),
-            params: vec![]
+            url_parameters: vec![]
         };
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.body.request.build().unwrap();
@@ -122,4 +121,5 @@ mod test {
         assert_eq!(req.method().to_string(), "POST");
         assert_eq!(req.url().to_string(), "http://localhost:8080/");
     }
+    
 }

@@ -36,13 +36,14 @@ pub(crate) struct HttpConfig {
 
     //HTTP Parameters that can be gattered from a Message if the message is a json file
     #[serde(default = "default_http_params")]
-    pub params: Vec<Parameter>,
+    pub url_parameters: Vec<Parameter>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Parameter{
-    pub key: String,
-    pub replace: Option<String>,
+    /// The key that will be get from 
+    pub record_key: String,
+    pub url_key: Option<String>,
     pub prefix: Option<String>,
     pub suffix: Option<String>
 }
