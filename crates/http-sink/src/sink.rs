@@ -99,7 +99,7 @@ mod test {
             headers: vec!["Content-Type: text/html".into()],
             http_connect_timeout: Duration::from_secs(1),
             http_request_timeout: Duration::from_secs(15),
-            url_parameters: vec![]
+            url_parameters: vec![],
         };
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.request.build().unwrap();
