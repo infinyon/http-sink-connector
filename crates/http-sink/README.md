@@ -34,48 +34,10 @@ http:
 | method               | POST                       | String          | POST, PUT                                         |
 | endpoint             | -                          | String          | HTTP URL endpoint                                 |
 | headers              | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
-| url_parameters       | -                          | Array\<Mapping\>| Dynamic URL parameters gathered from a json response|
+| params               | -                          | Array\<String\> | Dynamic URL parameters gathered from a json response. Set any key from a json message that you want to include into the URL as a parameter|
 | user-agent           | `fluvio/http-sink 0.2.2`   | String          | Request user-agent                                |
 | http_request_timeout | 1s                         | String          | HTTP Request Timeout                              |
 | http_connect_timeout | 15s                        | String          | HTTP Connect Timeout                              |
-
-#### URL Parameter Configuration
-| Option               | default                    | type            | description                                       |
-| :--------------------| :--------------------------| :-------------- | :-------------------------------------------------|
-| record_key           | -                          | String          | A key from a JSON record that will be used to insert a value to the parameter   |
-| url_key              | -                          | String          | Parameter's key name                              |
-| prefix               | -                          | String          | String to be added before the value               |
-| suffix               | -                          | String          | String to be added after the value                |
-
-###### Example: Inserting an ID from a JSON record into a URL Parameter
-
-Let's assume a scenario that the following endpoint requires a SQL condition to update a piece of information: `https://someurl.com/`
-
-It accepts `updatecondition=<SQL CONDITION HERE>` as a parameter to set the condition for the exact row that we want to update.
-
-We have the following JSON record that we want to get updated:
-```json
-  {
-    "id": 2901,
-    "name": "Luiz Barros Rocha",
-    "age": 26
-  }
-```
-We could write a url_parameter containing the following information:
-```yaml
-  {
-    url_parameters: 
-    - url_key: updatecondition
-      record_key: id
-      prefix: "user_id = "
-  }
-```
-
-This would be the ending result:
-```md
-https://someurl.com?updatecondition=user_id+%3D+2901
-```
-
 
 > By default HTTP headers will use `Content-Type: text/html` unless anothed value
 > is provided to the Headers configuration.

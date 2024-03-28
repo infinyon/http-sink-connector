@@ -34,6 +34,25 @@ teardown() {
     kill $MOCK_PID
 }
 
+
+@test "url_parameter" {
+    echo "Starting consumer on topic $TOPIC"
+    echo "Using connector $CONNECTOR"
+    sleep 45
+    
+    echo "Produce \"{\"id\": 2901, \"name\": \"Luiz Barros Rocha\", \"age\": 26}\" on $TOPIC"
+    echo "{\"id\": 2901, \"name\": \"Luiz Barros Rocha\", \"age\": 26}" | fluvio produce $TOPIC
+
+    echo "Sleep to ensure record is processed"
+    sleep 25
+
+    echo ""
+    
+    cat ./$LOGGER_FILENAME | grep "url: \"/?condition=user_id+%3D+2901&age=26+years\""
+    assert_success
+}
+
+
 @test "integration-sends-data-via-post" {
     echo "Starting consumer on topic $TOPIC"
     echo "Using connector $CONNECTOR"
