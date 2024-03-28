@@ -51,8 +51,8 @@ impl HttpSink {
             {
                 for param in self.url_parameters.iter() {
                     let url_key = param.url_key.clone().unwrap_or(param.record_key.clone());
-                    if json_message.contains_key(&param.record_key) {
-                        let mut value = json_message.get(&param.record_key).unwrap().to_string();
+                    if let Some(value) = json_message.get(&param.record_key) {
+                        let mut value = value.to_string();
                         if let Some(ref prefix) = param.prefix {
                             value = prefix.clone() + &value;
                         }
