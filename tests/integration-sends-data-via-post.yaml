@@ -7,3 +7,10 @@ meta:
 http:
   endpoint: http://localhost:8080
   interval: 3s
+  url_parameters: 
+    - record_key: id
+      url_key: condition
+      prefix: "user_id = "
+    - record_key: age
+      url_key: age
+      suffix: " years"

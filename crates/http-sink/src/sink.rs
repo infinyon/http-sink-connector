@@ -1,15 +1,18 @@
+use std::collections::HashMap;
+
+use crate::{config::Parameter, HttpConfig};
 use anyhow::{anyhow, Result};
-use async_trait::async_trait;
-use reqwest::{Client, RequestBuilder};
-
-use fluvio::Offset;
-use fluvio_connector_common::{tracing, LocalBoxSink, Sink};
-
-use crate::HttpConfig;
+use fluvio::dataplane::record::ConsumerRecord;
+use fluvio_connector_common::tracing;
+use reqwest::{Client, RequestBuilder, Response};
+use urlencoding::encode;
 
 #[derive(Debug)]
 pub(crate) struct HttpSink {
+    #[allow(dead_code)]
+    client: Client,
     request: RequestBuilder,
+    url_parameters: Vec<Parameter>,
 }
 
 impl HttpSink {
@@ -28,38 +31,56 @@ impl HttpSink {
             request = request.header(key, value.trim());
         }
 
-        Ok(Self { request })
-    }
-}
-
-#[async_trait]
-impl Sink<String> for HttpSink {
-    async fn connect(self, _offset: Option<Offset>) -> Result<LocalBoxSink<String>> {
-        let request = self.request;
-        let unfold = futures::sink::unfold(
+        Ok(Self {
+            client,
             request,
-            |mut request: RequestBuilder, record: String| async move {
-                tracing::trace!("{:?}", request);
+            url_parameters: config.url_parameters.clone(),
+        })
+    }
 
-                request = request.body(record);
-                let response = request
-                    .try_clone()
-                    .ok_or(anyhow!("ERR: Cannot clone request"))?
-                    .send()
-                    .await?;
+    pub(crate) fn make_request(&self, record: &ConsumerRecord) -> Result<RequestBuilder> {
+        let mut builder = self
+            .request
+            .try_clone()
+            .ok_or(anyhow!("ERR: Cannot clone request"))?;
 
-                if response.status().is_success() {
-                    tracing::debug!("Response Status: {}", response.status());
-                } else {
-                    tracing::warn!("Response Status: {}", response.status());
-                    tracing::debug!("{:?}", response);
+        if !self.url_parameters.is_empty() {
+            let str = String::from_utf8(record.as_ref().to_vec())?;
+            if let Ok(json_message) =
+                serde_json::from_str::<HashMap<String, serde_json::Value>>(&str)
+            {
+                for param in self.url_parameters.iter() {
+                    let url_key = param.url_key.clone().unwrap_or(param.record_key.clone());
+                    if json_message.contains_key(&param.record_key) {
+                        let mut value = json_message.get(&param.record_key).unwrap().to_string();
+                        if let Some(ref prefix) = param.prefix {
+                            value = prefix.clone() + &value;
+                        }
+                        if let Some(ref suffix) = param.suffix {
+                            value = value.clone() + &suffix;
+                        }
+                        builder = builder.query(&[(encode(&url_key), &value)]);
+                    }
                 }
+            }
+        }
+        Ok(builder)
+    }
 
-                Ok::<_, anyhow::Error>(request)
-            },
-        );
+    pub(crate) async fn send(&self, record: &ConsumerRecord) -> Result<Response> {
+        let str = String::from_utf8(record.as_ref().to_vec())?;
 
-        Ok(Box::pin(unfold))
+        let request = self.make_request(record)?;
+        let request = request.body(str);
+
+        let response = request.send().await?;
+        if response.status().is_success() {
+            tracing::debug!("Response Status: {}", response.status());
+        } else {
+            tracing::warn!("Response Status: {}", response.status());
+            tracing::debug!("{:?}", response);
+        }
+        Ok(response)
     }
 }
 
@@ -78,6 +99,7 @@ mod test {
             headers: vec!["Content-Type: text/html".into()],
             http_connect_timeout: Duration::from_secs(1),
             http_request_timeout: Duration::from_secs(15),
+            url_parameters: vec![],
         };
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.request.build().unwrap();
