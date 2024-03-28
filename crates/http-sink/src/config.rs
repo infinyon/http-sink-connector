@@ -40,12 +40,12 @@ pub(crate) struct HttpConfig {
 }
 
 #[derive(Deserialize, Debug, Clone)]
-pub struct Parameter{
-    /// The key that will be get from 
+pub struct Parameter {
+    /// The key that will be get from
     pub record_key: String,
     pub url_key: Option<String>,
     pub prefix: Option<String>,
-    pub suffix: Option<String>
+    pub suffix: Option<String>,
 }
 
 #[inline]
@@ -73,6 +73,6 @@ fn default_http_headers() -> Vec<String> {
     DEFAULT_HTTP_HEADERS.map(String::from).into_iter().collect()
 }
 
-fn default_http_params () -> Vec<Parameter>{
+fn default_http_params() -> Vec<Parameter> {
     vec![]
 }

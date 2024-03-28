@@ -1,30 +1,20 @@
 use std::collections::HashMap;
 
-use anyhow::{anyhow, Result};
-use async_trait::async_trait;
-use reqwest::{Client, RequestBuilder};
-use urlencoding::encode;
-use fluvio::Offset;
-use fluvio_connector_common::{tracing, LocalBoxSink, Sink};
 use crate::{config::Parameter, HttpConfig};
+use anyhow::{anyhow, Result};
+use fluvio::dataplane::record::ConsumerRecord;
+use fluvio_connector_common::tracing;
+use reqwest::{Client, RequestBuilder, Response};
+use urlencoding::encode;
 
 #[derive(Debug)]
 pub(crate) struct HttpSink {
-    body : Body
-}
-#[derive(Debug)]
-struct Body{
+    #[allow(dead_code)]
+    client: Client,
     request: RequestBuilder,
-    params: Vec<Parameter>,
+    url_parameters: Vec<Parameter>,
 }
-impl Clone for Body {
-    fn clone(&self) -> Self {
-        Body{
-            request : self.request.try_clone().unwrap(),
-            params  : self.params.clone()
-        }
-    }
-}
+
 impl HttpSink {
     pub(crate) fn new(config: &HttpConfig) -> Result<Self> {
         let client = Client::builder()
@@ -41,55 +31,56 @@ impl HttpSink {
             request = request.header(key, value.trim());
         }
 
-        Ok(Self { body: Body{request, params: config.url_parameters.clone()} })
+        Ok(Self {
+            client,
+            request,
+            url_parameters: config.url_parameters.clone(),
+        })
     }
-}
 
-#[async_trait]
-impl Sink<String> for HttpSink {
-    async fn connect(self, _offset: Option<Offset>) -> Result<LocalBoxSink<String>> {
-        let unfold = futures::sink::unfold(
-            self.body,
-            |mut body: Body, record: String| async move {
-                let params = body.params.clone();
-                if params.len() > 0 {
-                    if let Ok(json_message) = serde_json::from_str::<HashMap<String, serde_json::Value>>(&record){
-                        for param in params.into_iter() {
-                            let url_key = param.url_key.unwrap_or(param.record_key.clone());
-                            if json_message.contains_key(&param.record_key){
-                                let mut value = json_message.get(&param.record_key).unwrap().to_string();
-                                if let Some(prefix) = param.prefix{
-                                    value = prefix + &value;
-                                }
-                                if let Some(suffix) = param.suffix{
-                                    value = value + &suffix;
-                                }
-                                body.request = body.request.query(&[(encode(&url_key),&value)]);
+    pub(crate) fn make_request(&self, record: &ConsumerRecord) -> Result<RequestBuilder> {
+        let mut builder = self
+            .request
+            .try_clone()
+            .ok_or(anyhow!("ERR: Cannot clone request"))?;
 
-                            }
+        if !self.url_parameters.is_empty() {
+            let str = String::from_utf8(record.as_ref().to_vec())?;
+            if let Ok(json_message) =
+                serde_json::from_str::<HashMap<String, serde_json::Value>>(&str)
+            {
+                for param in self.url_parameters.iter() {
+                    let url_key = param.url_key.clone().unwrap_or(param.record_key.clone());
+                    if json_message.contains_key(&param.record_key) {
+                        let mut value = json_message.get(&param.record_key).unwrap().to_string();
+                        if let Some(ref prefix) = param.prefix {
+                            value = prefix.clone() + &value;
                         }
+                        if let Some(ref suffix) = param.suffix {
+                            value = value.clone() + &suffix;
+                        }
+                        builder = builder.query(&[(encode(&url_key), &value)]);
                     }
                 }
-                tracing::info!("{:?}", body.request);
+            }
+        }
+        Ok(builder)
+    }
 
-                body.request = body.request.body(record);
-                let response = body.request
-                    .try_clone()
-                    .ok_or(anyhow!("ERR: Cannot clone request"))?
-                    .send()
-                    .await?;
+    pub(crate) async fn send(&self, record: &ConsumerRecord) -> Result<Response> {
+        let str = String::from_utf8(record.as_ref().to_vec())?;
 
-                if response.status().is_success() {
-                    tracing::debug!("Response Status: {}", response.status());
-                } else {
-                    tracing::warn!("Response Status: {}", response.status());
-                    tracing::debug!("{:?}", response);
-                }
-                Ok::<_, anyhow::Error>(body)
-            },
-        );
+        let request = self.make_request(record)?;
+        let request = request.body(str);
 
-        Ok(Box::pin(unfold))
+        let response = request.send().await?;
+        if response.status().is_success() {
+            tracing::debug!("Response Status: {}", response.status());
+        } else {
+            tracing::warn!("Response Status: {}", response.status());
+            tracing::debug!("{:?}", response);
+        }
+        Ok(response)
     }
 }
 
@@ -111,7 +102,7 @@ mod test {
             url_parameters: vec![]
         };
         let sink = HttpSink::new(&config).unwrap();
-        let req = sink.body.request.build().unwrap();
+        let req = sink.request.build().unwrap();
 
         assert_eq!(req.headers().get("Content-Type").unwrap(), "text/html");
         assert_eq!(
@@ -121,5 +112,4 @@ mod test {
         assert_eq!(req.method().to_string(), "POST");
         assert_eq!(req.url().to_string(), "http://localhost:8080/");
     }
-    
 }
