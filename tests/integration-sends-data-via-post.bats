@@ -2,6 +2,7 @@
 
 load './bats-helpers/bats-support/load'
 load './bats-helpers/bats-assert/load'
+load './bats-helpers/tools_check.bash'
 
 setup() {
     UUID=$(uuidgen | awk '{print tolower($0)}')
@@ -15,6 +16,7 @@ setup() {
     cp ./tests/integration-sends-data-via-post.yaml $FILE
 
     CONNECTOR=${UUID}-sends-data
+    LOG_PATH="$CONNECTOR.log"
     export VERSION=$(cat ./crates/http-sink/Connector.toml | grep "^version = " | cut -d"\"" -f2)
     IPKG_NAME="http-sink-$VERSION.ipkg"
     fluvio topic create $TOPIC
@@ -24,12 +26,10 @@ setup() {
     sed -i.BAK "s/VERSION/${VERSION}/g" $FILE
     cat $FILE
 
-    cdk publish -p http-sink --pack --target x86_64-unknown-linux-musl
-    cdk deploy -p http-sink start --config $FILE
+    cdk deploy -p http-sink start --config $FILE --log-level info
 }
 
 teardown() {
-    fluvio topic delete $TOPIC
     cdk deploy shutdown --name $CONNECTOR
     kill $MOCK_PID
 }
@@ -37,31 +37,30 @@ teardown() {
 @test "integration-sends-data-via-post" {
     echo "Starting consumer on topic $TOPIC"
     echo "Using connector $CONNECTOR"
-    sleep 45
+
+    wait_for_line_in_file "monitoring started" $LOG_PATH 30
 
     echo "Produce \"California\" on $TOPIC"
     echo "California" | fluvio produce $TOPIC
 
-    echo "Sleep to ensure record is processed"
-    sleep 25
-
     echo "Contains California on Logger File"
-    cat ./$LOGGER_FILENAME | grep "California"
+    wait_for_line_in_file "California" $LOGGER_FILENAME 30
+
     assert_success
 }
 
 @test "sends-user-agent-with-current-version" {
     echo "Starting consumer on topic $TOPIC"
     echo "Using connector $CONNECTOR"
-    sleep 45
+
+    wait_for_line_in_file "monitoring started" $LOG_PATH 30
 
     echo "Produce \"North Carolina\" on $TOPIC"
     echo "North Carolina" | fluvio produce $TOPIC
 
-    echo "Sleep to ensure record is processed"
-    sleep 25
-
     echo "Contains User Agent with current version"
+    wait_for_line_in_file "user_agent" $LOGGER_FILENAME 30
     cat ./$LOGGER_FILENAME | grep "user_agent: \"fluvio/http-sink $VERSION\""
+
     assert_success
 }

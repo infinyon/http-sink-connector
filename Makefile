@@ -1,5 +1,5 @@
 test:
-	bats ./tests/integration-sends-data-via-post.bats
+	bats $(shell ls -1 ./tests/*.bats | sort -R)
 
 test_fluvio_install:
 	fluvio version

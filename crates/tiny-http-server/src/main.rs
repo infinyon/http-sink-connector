@@ -46,7 +46,6 @@ impl FileLogger {
     fn new(name: &str) -> Self {
         let file_name = Self::final_name(name);
         let file = OpenOptions::new()
-            .write(true)
             .create(true)
             .append(true)
             .open(&file_name)
