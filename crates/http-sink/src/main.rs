@@ -3,7 +3,7 @@ mod sink;
 
 use anyhow::Result;
 use config::HttpConfig;
-use futures::SinkExt;
+use futures::{SinkExt, StreamExt};
 use sink::HttpSink;
 
 use fluvio_connector_common::{connector, consumer::ConsumerStream, tracing, Sink};

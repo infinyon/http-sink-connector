@@ -6,10 +6,6 @@ concurrency:
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - staging
-      - trying
   pull_request:
     branches:
       - main
@@ -91,24 +87,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y musl-tools
 
-      - name: Create fluvio k3d Cluster
-        uses: AbsaOSS/k3d-action@v2.4.0
-        with:
-          cluster-name: "fluvio"
-          args: --timeout 5m
-
-      - name: Ensure k3d cluster is ready
-        run: |
-          sleep 5
-          ./actions/k3d-check.sh
-
       - name: Install Fluvio Local Cluster
         timeout-minutes: 10
         uses: infinyon/fluvio@master
         with:
-          cluster-type: k3d
-          version: stable
-
+          cluster-type: local
       - name: Setup Rust Cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -116,9 +99,6 @@ jobs:
 
       - name: Check Fluvio Installation
         run: make test_fluvio_install
-
-      - name: Install Fluvio CDK
-        run: fluvio install cdk --develop
 
       - name: Install Rust ${{ matrix.rust }}
         uses: actions-rs/toolchain@v1
