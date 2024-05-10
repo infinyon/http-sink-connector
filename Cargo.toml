@@ -12,7 +12,7 @@ lto = true
 [workspace.dependencies]
 async-std = { version = "1.12",  default-features = false, features = ["attributes", "tokio1"] }
 
-fluvio = { git = "https://github.com/infinyon/fluvio", tag = "v0.11.7"}
-fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", tag = "v0.11.7"}
-fluvio-smartmodule = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.11.7" }
-fluvio-smartengine = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.11.7", feature = ["engine", "wasi"] }
+fluvio = { git = "https://github.com/infinyon/fluvio", tag = "v0.11.8"}
+fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", tag = "v0.11.8"}
+fluvio-smartmodule = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.11.8" }
+fluvio-smartengine = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.11.8", feature = ["engine"] }
