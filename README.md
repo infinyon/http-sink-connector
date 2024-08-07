@@ -16,7 +16,7 @@ HTTP Sink is configured using a YAML file:
 # config-example.yaml
 apiVersion: 0.1.0
 meta:
-  version: 0.2.9
+  version: 0.2.10
   name: my-http-sink
   type: http-sink
   topic: http-sink-topic
@@ -34,7 +34,7 @@ http:
 | method               | POST                       | String          | POST, PUT                                         |
 | endpoint             | -                          | String          | HTTP URL endpoint                                 |
 | headers              | -                          | Array\<String\> | Request header(s) "Key:Value" pairs               |
-| user-agent           | `fluvio/http-sink 0.2.9`   | String          | Request user-agent                                |
+| user-agent           | `fluvio/http-sink 0.2.10`   | String          | Request user-agent                                |
 | http_request_timeout | 1s                         | String          | HTTP Request Timeout                              |
 | http_connect_timeout | 15s                        | String          | HTTP Connect Timeout                              |
 
@@ -57,7 +57,7 @@ HTTP request to `http://httpbin.org/post`.
 # config.yaml
 apiVersion: 0.1.0
 meta:
-  version: 0.2.9
+  version: 0.2.10
   name: httpbin
   type: http-sink
   topic: httpbin-send-post
@@ -133,7 +133,7 @@ The previous example can be extended to add extra transformations to outgoing re
 # config-example.yaml
 apiVersion: 0.1.0
 meta:
-  version: 0.2.9
+  version: 0.2.10
   name: my-http-sink
   type: http-sink
   topic: http-sink-topic
@@ -165,7 +165,7 @@ See the example below:
 ```yaml
 apiVersion: 0.2.0
 meta:
-  version: 0.2.9
+  version: 0.2.10
   name: my-http-sink
   type: http-sink
   topic:
