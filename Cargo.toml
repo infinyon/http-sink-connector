@@ -10,7 +10,7 @@ inherits = "release"
 lto = true
 
 [workspace.dependencies]
-async-std = { version = "1.12",  default-features = false, features = ["attributes", "tokio1"] }
+async-std = { version = "1.13",  default-features = false, features = ["attributes", "tokio1"] }
 
 fluvio = { git = "https://github.com/infinyon/fluvio", branch = "wasmtime_21" }
 fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", branch = "wasmtime_21" }
