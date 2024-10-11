@@ -43,12 +43,12 @@ http:
   endpoint: http://localhost:8080
   interval: 3s
 EOF
-    
+
     echo "RecordOne" | fluvio produce $TOPIC
     echo "RecordTwo" | fluvio produce $TOPIC
 
     cdk deploy -p http-sink start --config $CONFIG_PATH --log-level info
-    
+
     wait_for_line_in_file "monitoring started" $LOG_PATH 30
 
     wait_for_line_in_file "RecordOne" $LOGGER_FILENAME 30
@@ -60,7 +60,7 @@ EOF
     cat <<EOF >$CONFIG_PATH
 apiVersion: 0.2.0
 meta:
-  version: 0.1.0
+  version: 0.2.11
   name: $CONNECTOR_NAME
   type: http-sink
   topic:
@@ -74,9 +74,9 @@ http:
   endpoint: http://localhost:8080
   interval: 3s
 EOF
-    
+
     cdk deploy -p http-sink start --config $CONFIG_PATH --log-level info
-    
+
     wait_for_line_in_file "monitoring started" $LOG_PATH 30
 
     echo "RecordOne" | fluvio produce $TOPIC
