@@ -1,6 +1,6 @@
 [package]
 name = "http-sink"
-version = "0.2.10"
+version = "0.2.11"
 authors = ["Fluvio Contributors <team@fluvio.io>"]
 description = "Connector that reads data from a topic and sends to external HTTP webhook"
 edition = "2021"
@@ -17,3 +17,6 @@ humantime-serde = { version = "1.1", default-features = false  }
 
 fluvio = { workspace = true }
 fluvio-connector-common = { workspace = true, features = ["derive"] }
+
+# transitive dependency selection (resolve conflict in ver selection among deps)
+bytes = { version = "1.7.2" }
