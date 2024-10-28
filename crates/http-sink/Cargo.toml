@@ -19,4 +19,4 @@ fluvio = { workspace = true }
 fluvio-connector-common = { workspace = true, features = ["derive"] }
 
 # transitive dependency selection (resolve conflict in ver selection among deps)
-bytes = { version = "1.7.2" }
+bytes = { version = "1.8.0" }
