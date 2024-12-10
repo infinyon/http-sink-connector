@@ -78,7 +78,10 @@ mod test {
             headers: vec!["Content-Type: text/html".into()],
             http_connect_timeout: Duration::from_secs(1),
             http_request_timeout: Duration::from_secs(15),
+            backoff_max: Duration::from_secs(60),
+            backoff_min: Duration::from_secs(1),
         };
+
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.request.build().unwrap();
 
