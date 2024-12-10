@@ -1,29 +1,88 @@
 mod config;
 mod sink;
 
-use anyhow::Result;
+use adaptive_backoff::prelude::{
+    Backoff, BackoffBuilder, ExponentialBackoff, ExponentialBackoffBuilder,
+};
+use anyhow::{anyhow, Result};
 use config::HttpConfig;
+use fluvio::{consumer::Record, dataplane::link::ErrorCode};
 use futures::{SinkExt, StreamExt};
 use sink::HttpSink;
 
-use fluvio_connector_common::{connector, consumer::ConsumerStream, tracing, Sink};
+use fluvio_connector_common::{
+    connector,
+    consumer::ConsumerStream,
+    tracing::{self, debug, error, info, warn},
+    LocalBoxSink, Sink,
+};
 
 const SIGNATURES: &str = concat!("InfinyOn HTTP Sink Connector ", env!("CARGO_PKG_VERSION"));
 
 #[connector(sink)]
 async fn start(config: HttpConfig, mut stream: impl ConsumerStream) -> Result<()> {
-    tracing::debug!(?config);
+    let mut backoff = backoff_init(&config)?;
+    debug!(?config);
 
     let sink = HttpSink::new(&config)?;
     let mut sink = sink.connect(None).await?;
 
-    tracing::info!("Starting {SIGNATURES}");
+    info!("Starting {SIGNATURES}");
     while let Some(item) = stream.next().await {
         tracing::debug!("Received record in consumer");
-        let str = String::from_utf8(item?.as_ref().to_vec())?;
-        sink.send(str).await?;
+        if let Err(err) = process_item(&mut sink, &mut backoff, &config, item).await {
+            error!("Error processing item: {}", err);
+        }
     }
-    tracing::info!("Consumer loop finished");
+    info!("Consumer loop finished");
 
     Ok(())
+}
+
+async fn process_item(
+    sink: &mut LocalBoxSink<String>,
+    backoff: &mut ExponentialBackoff,
+    config: &HttpConfig,
+    item: Result<Record, ErrorCode>,
+) -> Result<()> {
+    let str = String::from_utf8(item?.as_ref().to_vec())?;
+    loop {
+        match sink.send(str.clone()).await {
+            Ok(_) => {
+                backoff.reset();
+                break;
+            }
+            Err(err) => {
+                error!("Error sending operation to sink: {}", err);
+                *sink = HttpSink::new(config)?.connect(None).await?;
+                backoff_and_wait(backoff, config).await?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
+async fn backoff_and_wait(backoff: &mut ExponentialBackoff, config: &HttpConfig) -> Result<()> {
+    let wait = backoff.wait();
+    if wait < config.backoff_max {
+        warn!(
+            "Waiting {} before next attempting to db",
+            humantime::format_duration(wait)
+        );
+        async_std::task::sleep(wait).await;
+        Ok(())
+    } else {
+        let err_msg = "Max retry on SQL Execution, shutting down";
+        error!(err_msg);
+        Err(anyhow!(err_msg))
+    }
+}
+
+fn backoff_init(config: &HttpConfig) -> Result<ExponentialBackoff> {
+    ExponentialBackoffBuilder::default()
+        .factor(1.5)
+        .min(config.backoff_min)
+        .max(config.backoff_max)
+        .build()
 }

@@ -10,9 +10,20 @@ inherits = "release"
 lto = true
 
 [workspace.dependencies]
+adaptive_backoff = "0.2.1"
+anyhow = { version = "1.0", default-features = false }
 async-std = { version = "1.13",  default-features = false, features = ["attributes", "tokio1"] }
+async-trait = { version = "0.1", default-features = false}
+futures = { version = "0.3", default-features = false }
+reqwest = { version = "0.12" }
+humantime = "2.1.0"
+url = { version = "2.5", default-features = false, features = ["serde"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+humantime-serde = { version = "1.1", default-features = false  }
+tiny_http = "0.12"
 
-fluvio = { git = "https://github.com/infinyon/fluvio", tag = "v0.12.0" }
-fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", tag = "v0.12.0" }
-fluvio-smartmodule = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.12.0" }
-fluvio-smartengine = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.12.0" }
+
+fluvio = { git = "https://github.com/infinyon/fluvio", branch = "fix_shutdown_cdk_future" }
+fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", branch = "fix_shutdown_cdk_future" }
+fluvio-smartmodule = { git = "https://github.com/infinyon/fluvio.git", branch = "fix_shutdown_cdk_future" }
+fluvio-smartengine = { git = "https://github.com/infinyon/fluvio.git", branch = "fix_shutdown_cdk_future" }

@@ -67,6 +67,8 @@ impl Sink<String> for HttpSink {
 mod test {
     use std::time::Duration;
 
+    use adaptive_backoff::prelude::{BackoffBuilder, ExponentialBackoffBuilder};
+
     use super::*;
 
     #[test]
@@ -78,7 +80,10 @@ mod test {
             headers: vec!["Content-Type: text/html".into()],
             http_connect_timeout: Duration::from_secs(1),
             http_request_timeout: Duration::from_secs(15),
+            backoff_max: Duration::from_secs(60),
+            backoff_min: Duration::from_secs(1),
         };
+
         let sink = HttpSink::new(&config).unwrap();
         let req = sink.request.build().unwrap();
 
