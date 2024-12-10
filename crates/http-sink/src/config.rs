@@ -32,7 +32,7 @@ pub(crate) struct HttpConfig {
     /// Http connect timeout in milliseconds
     #[serde(with = "humantime_serde", default = "default_http_connect_timeout")]
     pub http_connect_timeout: Duration,
-    
+
     /// Maximum backoff duration to reconnect to the database
     #[serde(with = "humantime_serde", default = "default_backoff_max")]
     pub backoff_max: Duration,

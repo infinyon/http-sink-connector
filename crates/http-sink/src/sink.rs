@@ -67,8 +67,6 @@ impl Sink<String> for HttpSink {
 mod test {
     use std::time::Duration;
 
-    use adaptive_backoff::prelude::{BackoffBuilder, ExponentialBackoffBuilder};
-
     use super::*;
 
     #[test]
