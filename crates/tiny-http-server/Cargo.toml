@@ -7,7 +7,6 @@ license = "Apache 2.0"
 authors = ["Fluvio Contributors <team@fluvio.io>"]
 
 [dependencies]
-tiny_http = "0.12"
+tiny_http = { workspace = true }
 async-std = { workspace = true }
-serde = { version = "1.0", default-features = false, features = ["derive"]}
-
+serde = { workspace = true, default-features = false, features = ["derive"]}
