@@ -6,7 +6,10 @@ use adaptive_backoff::prelude::{
 };
 use anyhow::{anyhow, Result};
 use config::HttpConfig;
-use fluvio::{consumer::Record, dataplane::link::ErrorCode};
+use fluvio::{
+    consumer::Record,
+    dataplane::{bytes::Bytes, link::ErrorCode},
+};
 use futures::{SinkExt, StreamExt};
 use sink::HttpSink;
 
@@ -40,14 +43,14 @@ async fn start(config: HttpConfig, mut stream: impl ConsumerStream) -> Result<()
 }
 
 async fn process_item(
-    sink: &mut LocalBoxSink<String>,
+    sink: &mut LocalBoxSink<Bytes>,
     backoff: &mut ExponentialBackoff,
     config: &HttpConfig,
     item: Result<Record, ErrorCode>,
 ) -> Result<()> {
-    let str = String::from_utf8(item?.as_ref().to_vec())?;
+    let item: Bytes = item?.into_inner().into_value().into_vec().into();
     loop {
-        match sink.send(str.clone()).await {
+        match sink.send(item.clone()).await {
             Ok(_) => {
                 backoff.reset();
                 break;
@@ -73,7 +76,7 @@ async fn backoff_and_wait(backoff: &mut ExponentialBackoff, config: &HttpConfig)
         async_std::task::sleep(wait).await;
         Ok(())
     } else {
-        let err_msg = "Max retry on SQL Execution, shutting down";
+        let err_msg = "Max retry on Http request, shutting down";
         error!(err_msg);
         Err(anyhow!(err_msg))
     }

@@ -1,8 +1,8 @@
 use anyhow::{anyhow, Result};
 use async_trait::async_trait;
-use reqwest::{Client, RequestBuilder};
+use reqwest::{Body, Client, RequestBuilder};
 
-use fluvio::Offset;
+use fluvio::{dataplane::bytes::Bytes, Offset};
 use fluvio_connector_common::{tracing, LocalBoxSink, Sink};
 
 use crate::HttpConfig;
@@ -33,15 +33,15 @@ impl HttpSink {
 }
 
 #[async_trait]
-impl Sink<String> for HttpSink {
-    async fn connect(self, _offset: Option<Offset>) -> Result<LocalBoxSink<String>> {
+impl Sink<Bytes> for HttpSink {
+    async fn connect(self, _offset: Option<Offset>) -> Result<LocalBoxSink<Bytes>> {
         let request = self.request;
         let unfold = futures::sink::unfold(
             request,
-            |mut request: RequestBuilder, record: String| async move {
+            |mut request: RequestBuilder, record: Bytes| async move {
                 tracing::trace!("{:?}", request);
 
-                request = request.body(record);
+                request = request.body(Body::from(record));
                 let response = request
                     .try_clone()
                     .ok_or(anyhow!("ERR: Cannot clone request"))?
