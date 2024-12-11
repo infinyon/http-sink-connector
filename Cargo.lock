@@ -1710,6 +1710,7 @@ dependencies = [
  "async-trait",
  "fluvio",
  "fluvio-connector-common",
+ "fluvio-future",
  "futures",
  "humantime",
  "humantime-serde",

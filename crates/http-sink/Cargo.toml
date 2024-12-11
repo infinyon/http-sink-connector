@@ -17,5 +17,6 @@ url = { workspace = true, default-features = false, features = ["serde"] }
 serde = { workspace = true, default-features = false, features = ["derive"] }
 humantime-serde = { workspace = true, default-features = false  }
 
+fluvio-future = { workspace = true }
 fluvio = { workspace = true }
 fluvio-connector-common = { workspace = true, features = ["derive"] }

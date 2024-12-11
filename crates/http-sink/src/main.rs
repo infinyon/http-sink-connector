@@ -73,7 +73,7 @@ async fn backoff_and_wait(backoff: &mut ExponentialBackoff, config: &HttpConfig)
             "Waiting {} before next attempting to db",
             humantime::format_duration(wait)
         );
-        async_std::task::sleep(wait).await;
+        fluvio_future::timer::sleep(wait).await;
         Ok(())
     } else {
         let err_msg = "Max retry on Http request, shutting down";
