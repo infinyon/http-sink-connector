@@ -24,7 +24,7 @@ tiny_http = "0.12"
 
 
 fluvio-future = { version = "0.7.0", default-features = false }
-fluvio = { git = "https://github.com/infinyon/fluvio", branch = "fix_shutdown_cdk_future" }
-fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", branch = "fix_shutdown_cdk_future" }
-fluvio-smartmodule = { git = "https://github.com/infinyon/fluvio.git", branch = "fix_shutdown_cdk_future" }
-fluvio-smartengine = { git = "https://github.com/infinyon/fluvio.git", branch = "fix_shutdown_cdk_future" }
+fluvio = { git = "https://github.com/infinyon/fluvio", tag = "v0.16.1" }
+fluvio-connector-common = { git = "https://github.com/infinyon/fluvio", tag = "v0.16.1" }
+fluvio-smartmodule = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.16.1" }
+fluvio-smartengine = { git = "https://github.com/infinyon/fluvio.git", tag = "v0.16.1" }
