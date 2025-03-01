@@ -32,6 +32,14 @@ pub(crate) struct HttpConfig {
     /// Http connect timeout in milliseconds
     #[serde(with = "humantime_serde", default = "default_http_connect_timeout")]
     pub http_connect_timeout: Duration,
+
+    /// Maximum backoff duration to reconnect to the database
+    #[serde(with = "humantime_serde", default = "default_backoff_max")]
+    pub backoff_max: Duration,
+
+    /// Minimum backoff duration to reconnect to the database
+    #[serde(with = "humantime_serde", default = "default_backoff_min")]
+    pub backoff_min: Duration,
 }
 
 #[inline]
@@ -57,4 +65,14 @@ fn default_http_method() -> String {
 #[inline]
 fn default_http_headers() -> Vec<String> {
     DEFAULT_HTTP_HEADERS.map(String::from).into_iter().collect()
+}
+
+#[inline]
+fn default_backoff_max() -> Duration {
+    Duration::from_secs(60)
+}
+
+#[inline]
+fn default_backoff_min() -> Duration {
+    Duration::from_secs(1)
 }
