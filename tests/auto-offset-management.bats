@@ -64,7 +64,7 @@ EOF
     cat <<EOF >$CONFIG_PATH
 apiVersion: 0.2.0
 meta:
-  version: 0.2.12
+  version: 0.3.0
   name: $CONNECTOR_NAME
   type: http-sink
   topic:

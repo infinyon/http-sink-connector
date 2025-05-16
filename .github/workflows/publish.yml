@@ -23,5 +23,5 @@ jobs:
       fail-fast: false
       readme: './README.md'
     secrets:
-      CLOUD_USER_EMAIL: ${{ secrets.HUB_USER_EMAIL }}
-      CLOUD_USER_PASSWORD: ${{ secrets.HUB_USER_PASSWORD }}
+      CLOUD_USER_EMAIL: ${{ secrets.ORG_CLOUD_SERVICE_EMAIL }}
+      CLOUD_USER_PASSWORD: ${{ secrets.ORG_CLOUD_SERVICE_PASSWD_PROD }}
