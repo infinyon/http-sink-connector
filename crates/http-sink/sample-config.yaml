@@ -1,8 +1,16 @@
 meta:
-  version: 0.2.3
-  name: slack-sink
+  version: 0.3.0
+  name: http-sink
   type: http-sink
   topic: http-sink
+  consumer:
+    id: my-http-sink
+    offset:
+      strategy: auto
+      start: beginning
+      flush-period:
+        secs: 10
+        nanos: 0
 http:
   endpoint: "https://httpbin.org/post"
   http_request_timeout: 1s
